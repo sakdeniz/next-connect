@@ -1,0 +1,10 @@
+{
+  "name": "NEXT-Connect",
+  "description": "Navcoin NEXT Connect",
+  "version": "1.0.0",
+  "author": "Navcoin Developers <info@nextwallet.org>",
+  "license": "MIT",
+  "dependencies": {
+    "navcoin-js": "^1.1.42"
+  }
+}
