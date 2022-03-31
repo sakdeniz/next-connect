@@ -108,6 +108,18 @@ async function main()
 		console.log("NFT Moved");
 		console.log("Old hash -> " + s[0][0]);
 		console.log("New hash -> " + s[1].spender_txhash);
+		let sql = "UPDATE `nft`.`proofs` SET `invalidated_date`=NOW(),`new_hash`='"+s[1].spender_txhash+"',`is_valid` = '0' WHERE `proofs`.`hash`='"+s[0][0]+"';";
+		con.query(sql, function (err, result)
+		{
+			if (err)
+			{
+				console.log("NFT ownership cannot invalidated -> " + err);
+			}
+			else
+			{
+				console.log("NFT ownership successfully invalidated.");
+			}
+		});
 	}
 	server=http.createServer(function (req, res)
 	{
@@ -148,6 +160,7 @@ async function main()
 						    tokenid,
 						    nft_id,
 						    hash,
+						    nout,
 						    new_hash,
 						    verification_date,
 						    is_valid
@@ -158,11 +171,11 @@ async function main()
 						    '`+post.proof.tokenId.toString()+`',
 						    '`+post.proof.nftId+`',
 						    '`+post.result.txid+`',
+						    '`+post.result.nout+`',
 						    NULL,
 						    NOW(),
 						    '1'
 						);`;
-						console.log(sql);
 						con.query(sql, function (err, result)
 						{
 							if (err)
@@ -197,22 +210,28 @@ async function main()
 		}
 	}
 	client.subscribe.on("blockchain.outpoint.subscribe", verifyStatus);
+
+	function subscribe_nfts()
+	{
+		con.query("SELECT * FROM nft.proofs", function (err, result, fields)
+		{
+			if (err) throw err;
+			result.forEach(async e =>
+			{
+				console.log("Subscribing -> " + e.hash + "->" + e.nout);
+				let currentStatus = await client.blockchain_outpoint_subscribe(e.hash,parseInt(e.nout));
+				verifyStatus([[e.hash, parseInt(e.nout)], currentStatus]);
+			});
+		});
+	}
+	
 	try
 	{
 		await client.connect(
 			'electrum-client-js', // optional client name
 			'1.5' // optional protocol version
 		)
-		
-		let txid="2c1d20fe60d6ab296a28e7db9d00efa2b6a3b7df40c270b5bc16be4dd58ba7bc";
-		let vout="0";
-		let currentStatus = await client.blockchain_outpoint_subscribe(txid,vout);
-		verifyStatus([[txid, vout], currentStatus]);
-		
-		txid="dc3f313cf37175a0073665f5d1eaddd190d2ea08b648f6ea2659687b333ab740";
-		vout="1";
-		currentStatus = await client.blockchain_outpoint_subscribe(txid,vout);
-		verifyStatus([[txid, vout], currentStatus]);
+		subscribe_nfts();
 	}
 	catch (err)
 	{
