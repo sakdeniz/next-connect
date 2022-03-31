@@ -213,15 +213,15 @@ async function main()
 
 	function subscribe_nfts()
 	{
-		con.query("SELECT * FROM nft.proofs", function (err, result, fields)
+		con.query("SELECT * FROM nft.proofs", async function (err, result, fields)
 		{
 			if (err) throw err;
-			result.forEach(async e =>
+			for (let e of result)
 			{
 				console.log("Subscribing -> " + e.hash + "->" + e.nout);
 				let currentStatus = await client.blockchain_outpoint_subscribe(e.hash,parseInt(e.nout));
 				verifyStatus([[e.hash, parseInt(e.nout)], currentStatus]);
-			});
+			}
 		});
 	}
 	
