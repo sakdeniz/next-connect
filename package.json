@@ -5,6 +5,9 @@
   "author": "Navcoin Developers <info@nextwallet.org>",
   "license": "MIT",
   "dependencies": {
-    "navcoin-js": "^1.1.42"
+    "@babel/runtime": "^7.17.8",
+    "babel-loader": "^8.2.4",
+    "mysql": "^2.18.1",
+    "navcoin-js": "^1.1.58"
   }
 }
