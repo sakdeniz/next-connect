@@ -121,6 +121,12 @@ async function main()
 			}
 		});
 	}
+	function sendResponse(res, statusCode, body)
+	{
+		res.writeHead(statusCode);
+		res.write(body);
+		res.end();
+	}
 	server=http.createServer(function (req, res)
 	{
 		res.setHeader('Access-Control-Allow-Origin', "*");
@@ -154,43 +160,62 @@ async function main()
 					if (retval.result)
 					{
 						console.log("NFT ownership verified -> " + post.proof.tokenId + "(" + post.proof.nftId + ")");
-						let sql = `INSERT INTO nft.proofs(
-						    id,
-						    private_address,
-						    tokenid,
-						    nft_id,
-						    hash,
-						    nout,
-						    new_hash,
-						    verification_date,
-						    is_valid
-						)
-						VALUES(
-						    NULL,
-						    '`+post.proof.privateAddress+`',
-						    '`+post.proof.tokenId.toString()+`',
-						    '`+post.proof.nftId+`',
-						    '`+post.result.txid+`',
-						    '`+post.result.nout+`',
-						    NULL,
-						    NOW(),
-						    '1'
-						);`;
-						con.query(sql, function (err, result)
+						con.query("SELECT * FROM nft.proofs WHERE private_address='"+post.proof.privateAddress+"' AND tokenid='"+post.proof.tokenId.toString()+"' AND nft_id='"+post.proof.nftId+"' AND hash='"+post.result.txid+"'", function (err, result, fields)
 						{
-							if (err)
+							if (err) throw err;
+							console.log(result.length);
+							if (result.length==0)
 							{
-								console.log("NFT ownership record not added -> " + err);
+								let sql = `INSERT INTO nft.proofs(
+								    id,
+								    private_address,
+								    tokenid,
+								    nft_id,
+								    hash,
+								    nout,
+								    new_hash,
+								    verification_date,
+								    is_valid
+								)
+								VALUES(
+								    NULL,
+								    '`+post.proof.privateAddress+`',
+								    '`+post.proof.tokenId.toString()+`',
+								    '`+post.proof.nftId+`',
+								    '`+post.result.txid+`',
+								    '`+post.result.nout+`',
+								    NULL,
+								    NOW(),
+								    '1'
+								);`;
+								con.query(sql, function (err, result)
+								{
+									if (err)
+									{
+										console.log("NFT ownership record not added -> " + err);
+									}
+									else
+									{
+										console.log("NFT ownership record added to database.");
+										let obj={status:"verified",verified_nft:post.proof};
+										console.log(sendResponse(res, 200,JSON.stringify(obj)));
+									}
+								});
 							}
 							else
 							{
-								console.log("NFT ownership record added to database.");
+								console.log("This NFT already verified.");
+								let obj={status:"already_verified",verified_nft:post.proof};
+								console.log(obj);
+								sendResponse(res, 200,JSON.stringify(obj));
 							}
 						});
 					}
 					else
 					{
 						console.log("NFT ownership verification failed -> " + post.proof.tokenId + "(" + post.proof.nftId + ")");
+						let obj={status:"failed",verified_nft:post.proof};
+						sendResponse(res, 200,JSON.stringify(obj));
 					}
 				}).
 				catch((e) =>
