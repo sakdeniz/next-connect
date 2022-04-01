@@ -108,16 +108,27 @@ async function main()
 		console.log("NFT Moved");
 		console.log("Old hash -> " + s[0][0]);
 		console.log("New hash -> " + s[1].spender_txhash);
-		let sql = "UPDATE `nft`.`proofs` SET `invalidated_date`=NOW(),`new_hash`='"+s[1].spender_txhash+"',`is_valid` = '0' WHERE `proofs`.`hash`='"+s[0][0]+"';";
-		con.query(sql, function (err, result)
+		con.query("SELECT * FROM nft.proofs WHERE hash='"+s[0][0]+"' AND is_valid=1 LIMIT 1;", function (err, result, fields)
 		{
-			if (err)
+			if (err) throw err;
+			if (result.length==1)
 			{
-				console.log("NFT ownership cannot invalidated -> " + err);
+				let sql = "UPDATE `nft`.`proofs` SET `invalidated_date`=NOW(),`new_hash`='"+s[1].spender_txhash+"',`is_valid` = '0' WHERE `proofs`.`hash`='"+s[0][0]+"';";
+				con.query(sql, function (err, result)
+				{
+					if (err)
+					{
+						console.log("NFT ownership cannot invalidated -> " + err);
+					}
+					else
+					{
+						console.log("NFT ownership successfully invalidated.");
+					}
+				});
 			}
 			else
 			{
-				console.log("NFT ownership successfully invalidated.");
+				console.log("NFT ownership already invalidated.");
 			}
 		});
 	}
@@ -160,14 +171,14 @@ async function main()
 					if (retval.result)
 					{
 						console.log("NFT ownership verified -> " + post.proof.tokenId + "(" + post.proof.nftId + ")");
-						con.query("SELECT * FROM nft.proofs WHERE private_address='"+post.proof.privateAddress+"' AND tokenid='"+post.proof.tokenId.toString()+"' AND nft_id='"+post.proof.nftId+"' AND hash='"+post.result.txid+"'", function (err, result, fields)
+						con.query("SELECT * FROM nft.proofs WHERE project_id='"+post.project_id+"' AND private_address='"+post.private_address+"' AND tokenid='"+post.proof.tokenId.toString()+"' AND nft_id='"+post.proof.nftId+"' AND hash='"+post.result.txid+"'", function (err, result, fields)
 						{
 							if (err) throw err;
-							console.log(result.length);
 							if (result.length==0)
 							{
 								let sql = `INSERT INTO nft.proofs(
 								    id,
+								    project_id,
 								    private_address,
 								    tokenid,
 								    nft_id,
@@ -179,7 +190,8 @@ async function main()
 								)
 								VALUES(
 								    NULL,
-								    '`+post.proof.privateAddress+`',
+								    '`+post.project_id+`',
+								    '`+post.private_address+`',
 								    '`+post.proof.tokenId.toString()+`',
 								    '`+post.proof.nftId+`',
 								    '`+post.result.txid+`',
@@ -197,7 +209,7 @@ async function main()
 									else
 									{
 										console.log("NFT ownership record added to database.");
-										let obj={status:"verified",verified_nft:post.proof};
+										let obj={status:"verified",proof:post.proof};
 										console.log(sendResponse(res, 200,JSON.stringify(obj)));
 									}
 								});
@@ -205,7 +217,7 @@ async function main()
 							else
 							{
 								console.log("This NFT already verified.");
-								let obj={status:"already_verified",verified_nft:post.proof};
+								let obj={status:"already_verified",proof:post.proof};
 								console.log(obj);
 								sendResponse(res, 200,JSON.stringify(obj));
 							}
@@ -214,7 +226,7 @@ async function main()
 					else
 					{
 						console.log("NFT ownership verification failed -> " + post.proof.tokenId + "(" + post.proof.nftId + ")");
-						let obj={status:"failed",verified_nft:post.proof};
+						let obj={status:"failed",proof:post.proof};
 						sendResponse(res, 200,JSON.stringify(obj));
 					}
 				}).
@@ -238,7 +250,7 @@ async function main()
 
 	function subscribe_nfts()
 	{
-		con.query("SELECT * FROM nft.proofs", async function (err, result, fields)
+		con.query("SELECT hash,nout FROM nft.proofs WHERE is_valid=1", async function (err, result, fields)
 		{
 			if (err) throw err;
 			for (let e of result)
