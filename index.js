@@ -108,7 +108,7 @@ async function main()
 		console.log("NFT Moved");
 		console.log("Old hash -> " + s[0][0]);
 		console.log("New hash -> " + s[1].spender_txhash);
-		con.query("SELECT * FROM nft.proofs WHERE hash='"+s[0][0]+"' AND is_valid=1 LIMIT 1;", function (err, result, fields)
+		con.query("SELECT id FROM nft.proofs WHERE hash='"+s[0][0]+"' AND is_valid=1 LIMIT 1;", function (err, result, fields)
 		{
 			if (err) throw err;
 			if (result.length==1)
