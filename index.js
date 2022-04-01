@@ -163,7 +163,7 @@ async function main()
 			console.log(datetime + " " + req.url);
 			if (req.url=="/GetSellOrders")
 			{
-				con.query("SELECT * FROM nft.orders WHERE order_active=1", async function (err, result, fields)
+				con.query("SELECT * FROM nft.orders WHERE is_valid=1", async function (err, result, fields)
 				{
 					if (err) throw err;
 					let obj={status:"success",orders:result};
