@@ -101,7 +101,7 @@ async function main()
 	con.connect(function(err)
 	{
 		if (err) throw err;
-		console.log("Connected to MySQL!");
+		console.log("Connected to MySQL server.");
 	});
 	function invalidateProof(s)
 	{
@@ -155,6 +155,58 @@ async function main()
 			var now=new Date(); 
 			var datetime=now.getHours()+':'+now.getMinutes()+':'+now.getSeconds(); 
 			console.log(datetime + " " + req.url);
+			if (req.url=="/CreateSellNftOrder")
+			{
+				let token_id=post.order.receive[0].tokenId;
+				let token_nft_id=post.order.receive[0].tokenNftId;
+				console.log(post.order);
+				console.log(token_id);
+				console.log(token_nft_id);
+				con.query("SELECT * FROM nft.orders WHERE token_id='"+token_id+"' AND token_nft_id='"+token_nft_id+"' AND order_active=1", function (err, result, fields)
+				{
+					if (err) throw err;
+					if (result.length==0)
+					{
+						let sql = `INSERT INTO nft.orders(
+						    id,
+						    token_id,
+						    token_nft_id,
+						    nft_order,
+						    created_at,
+						    order_active
+						)
+						VALUES(
+						    NULL,
+						    '`+token_id+`',
+						    '`+token_nft_id+`',
+						    '`+JSON.stringify(post.order)+`',
+						    NOW(),
+						    '1'
+						);`;
+						con.query(sql, function (err, result)
+						{
+							if (err)
+							{
+								let obj={status:"failed",order:post.order};
+								console.log(obj);
+								console.log("NFT sell order record not added -> " + err);
+							}
+							else
+							{
+								console.log("NFT sell order record added to database.");
+								let obj={status:"order_created",proof:post.proof};
+								console.log(sendResponse(res, 200,JSON.stringify(obj)));
+							}
+						});
+					}
+					else
+					{
+						let obj={status:"failed",order:post.order};
+						console.log(obj);
+						sendResponse(res, 200,JSON.stringify(obj));
+					}
+				});
+			}
 			if (req.url=="/proof")
 			{
 				console.log("Proof");
@@ -250,6 +302,7 @@ async function main()
 
 	function subscribe_nfts()
 	{
+		console.log("Subscribing for verified nfts...");
 		con.query("SELECT hash,nout FROM nft.proofs WHERE is_valid=1", async function (err, result, fields)
 		{
 			if (err) throw err;
