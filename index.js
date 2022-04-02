@@ -94,8 +94,8 @@ async function main()
 	)
 	var con = mysql.createConnection({
 		host: "localhost",
-		user: "nft",
-		password: "Xl1.38zCqV]Uyv]G"
+		user: "root",
+		password: ""
 	});
 
 	con.connect(function(err)
