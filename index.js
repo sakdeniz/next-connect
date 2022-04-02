@@ -103,17 +103,14 @@ async function main()
 		if (err) throw err;
 		console.log("Connected to MySQL server.");
 	});
-	function invalidateProof(t,s)
+	function invalidateProof(s)
 	{
-		console.log(t);
-		let table="";
-		if (t=="proof") table="proofs";
-		if (t=="order") table="orders";
 		console.log("NFT Moved");
 		console.log("Old hash -> " + s[0][0]);
 		console.log("New hash -> " + s[1].spender_txhash);
+		let table="proofs";
 		let sql="SELECT id FROM nft."+table+" WHERE hash='"+s[0][0]+"' AND is_valid=1 LIMIT 1;";
-		console.log(sql);
+		//console.log(sql);
 		con.query(sql, function (err, result, fields)
 		{
 			if (err) throw err;
@@ -124,17 +121,43 @@ async function main()
 				{
 					if (err)
 					{
-						console.log("NFT ownership ("+t+")cannot invalidated -> " + err);
+						console.log("NFT ownership (proof) cannot invalidated -> " + err);
 					}
 					else
 					{
-						console.log("NFT ownership ("+t+") successfully invalidated.");
+						console.log("NFT ownership (proof) successfully invalidated.");
 					}
 				});
 			}
 			else
 			{
-				console.log("NFT ownership ("+t+") already invalidated.");
+				console.log("NFT ownership (proof) already invalidated.");
+			}
+		});
+		table="orders";
+		sql="SELECT id FROM nft."+table+" WHERE hash='"+s[0][0]+"' AND is_valid=1 LIMIT 1;";
+		//console.log(sql);
+		con.query(sql, function (err, result, fields)
+		{
+			if (err) throw err;
+			if (result.length==1)
+			{
+				let sql = "UPDATE nft."+table+" SET `invalidated_date`=NOW(),`new_hash`='"+s[1].spender_txhash+"',`is_valid` = '0' WHERE "+table+".hash='"+s[0][0]+"';";
+				con.query(sql, function (err, result)
+				{
+					if (err)
+					{
+						console.log("NFT ownership (order) cannot invalidated -> " + err);
+					}
+					else
+					{
+						console.log("NFT ownership (order) successfully invalidated.");
+					}
+				});
+			}
+			else
+			{
+				console.log("NFT ownership (order) already invalidated.");
 			}
 		});
 	}
@@ -170,6 +193,28 @@ async function main()
 					sendResponse(res, 200,JSON.stringify(obj))
 				});
 			}
+			if (req.url=="/CancelOrder")
+			{
+				console.log("Verifying NFT proof -> " + post.proof.tokenId + "(" + post.proof.nftId + ")");
+				let hex=Buffer.from(post.proof.sig).toString('hex');
+				let proof={nftId:parseInt(post.proof.nftId),tokenId:post.proof.tokenId.toString(),sig:Buffer.from(hex,'hex')};
+				wallet.VerifyNftProof(post.proof.tokenId.toString(),parseInt(post.proof.nftId),proof).then((retval) =>
+				{
+					console.log(retval);
+					if (retval.result)
+					{
+						console.log("NFT ownership verified -> " + post.proof.tokenId + "(" + post.proof.nftId + ")");
+						console.log("Cancelling NFT order -> " + post.proof.tokenId + "(" + post.proof.nftId + ")");
+						con.query("UPDATE nft.orders SET is_valid=0 WHERE token_id='"+post.proof.tokenId.toString()+"' AND nft_id="+post.proof.nftId+" AND is_valid=1", async function (err, result, fields)
+						{
+							if (err) throw err;
+							console.log("NFT order cancelled -> " + post.proof.tokenId + "(" + post.proof.nftId + ")");
+							let obj={status:"success"};
+							sendResponse(res, 200,JSON.stringify(obj));
+						});
+					}
+				});
+			}
 			if (req.url=="/CreateSellNftOrder")
 			{
 				let token_id=post.order.receive[0].tokenId;
@@ -187,54 +232,66 @@ async function main()
 					if (retval.result)
 					{
 						console.log("NFT ownership verified -> " + post.proof.tokenId + "(" + post.proof.nftId + ")");
-						con.query("SELECT * FROM nft.orders WHERE token_id='"+token_id+"' AND nft_id='"+nft_id+"' AND is_valid=1", function (err, result, fields)
+						console.log("Fetching NFT metadata -> " + post.proof.tokenId + "(" + post.proof.nftId + ")");
+						wallet.GetNftInfo(post.proof.tokenId.toString(),parseInt(post.proof.nftId)).then((nftinfo) =>
 						{
-							if (err) throw err;
-							if (result.length==0)
+							console.log(nftinfo);
+							con.query("SELECT * FROM nft.orders WHERE token_id='"+token_id+"' AND nft_id='"+nft_id+"' AND is_valid=1", function (err, result, fields)
 							{
-								let sql = `INSERT INTO nft.orders(
-								    id,
-								    token_id,
-								    nft_id,
-								    hash,
-								    nout,
-								    nft_order,
-								    verification_date,
-								    is_valid
-								)
-								VALUES(
-								    NULL,
-								    '`+token_id+`',
-								    '`+nft_id+`',
-								    '`+retval.txid+`',
-								    '`+retval.nout+`',
-								    '`+JSON.stringify(post.order)+`',
-								    NOW(),
-								    '1'
-								);`;
-								console.log(sql);
-								con.query(sql, function (err, result)
+								if (err) throw err;
+								if (result.length==0)
 								{
-									if (err)
+									let sql = `INSERT INTO nft.orders(
+									    id,
+									    token_id,
+									    nft_id,
+									    metadata,
+									    hash,
+									    nout,
+									    nft_order,
+									    verification_date,
+									    is_valid
+									)
+									VALUES(
+									    NULL,
+									    '`+token_id+`',
+									    '`+nft_id+`',
+									    ?,
+									    '`+retval.txid+`',
+									    '`+retval.nout+`',
+									    '`+JSON.stringify(post.order)+`',
+									    NOW(),
+									    '1'
+									);`;
+									console.log(sql);
+									con.query(sql,[JSON.stringify(nftinfo)], async function (err, result)
 									{
-										let obj={status:"failed",order:post.order};
-										console.log(obj);
-										console.log("NFT sell order record not added -> " + err);
-									}
-									else
-									{
-										console.log("NFT sell order record added to database.");
-										let obj={status:"order_created",proof:post.proof};
-										sendResponse(res, 200,JSON.stringify(obj));
-									}
-								});
-							}
-							else
-							{
-								let obj={status:"failed",order:post.order};
-								console.log(obj);
-								sendResponse(res, 200,JSON.stringify(obj));
-							}
+										if (err)
+										{
+											let obj={status:"failed",message:"Database error.",order:post.order};
+											console.log(obj);
+											console.log("NFT sell order record not added -> " + err);
+										}
+										else
+										{
+											console.log("NFT sell order record added to database.");
+											
+											console.log("Subscribing nft sell order -> " + retval.txid + "->" + retval.nout);
+											let currentStatus = await client.blockchain_outpoint_subscribe(retval.txid,retval.nout);
+											verifyStatus([[retval.txid, retval.nout], currentStatus]);
+
+											let obj={status:"order_created",proof:post.proof};
+											sendResponse(res, 200,JSON.stringify(obj));
+										}
+									});
+								}
+								else
+								{
+									let obj={status:"failed",message:"Order already exist",order:post.order};
+									console.log(obj);
+									sendResponse(res, 200,JSON.stringify(obj));
+								}
+							});
 						});
 					}
 					else
@@ -331,16 +388,10 @@ async function main()
 
 	const verifyStatus = (s) => 
 	{
+		console.log("Verifying status...");
 		if (s[1] && s[1].spender_txhash)
 		{
-			invalidateProof("proof",s);
-		}
-	}
-	const verifyOrderStatus = (s) => 
-	{
-		if (s[1] && s[1].spender_txhash)
-		{
-			invalidateProof("order",s);
+			invalidateProof(s);
 		}
 	}
 	client.subscribe.on("blockchain.outpoint.subscribe", verifyStatus);
@@ -366,7 +417,7 @@ async function main()
 			{
 				console.log("Subscribing nft sell order -> " + e.hash + "->" + e.nout);
 				let currentStatus = await client.blockchain_outpoint_subscribe(e.hash,parseInt(e.nout));
-				verifyOrderStatus([[e.hash, parseInt(e.nout)], currentStatus]);
+				verifyStatus([[e.hash, parseInt(e.nout)], currentStatus]);
 			}
 		});
 	}
