@@ -45,8 +45,8 @@ Response
 ```
 CreateSellNftOrder
 ```
-Creates an NFT sell order.
-  POST Parameters
+Creates an NFT sell order.  
+POST Parameters
 ```
 {
   "order": {},
