@@ -29,5 +29,7 @@ Requests should be made in accordance with the URL structure below.
 http://localhost:3000/{function}
 
 # Functions
-```GetSellOrders```
+```
+GetSellOrders
+```
 Returns all active sell orders
