@@ -182,7 +182,7 @@ async function main()
 			var now=new Date(); 
 			var datetime=now.getHours()+':'+now.getMinutes()+':'+now.getSeconds(); 
 			console.log(datetime + " " + req.url);
-			if (req.url=="/GetSellOrders")
+			if (req.url=="/GetNftSellOrders")
 			{
 				con.query("SELECT orders.metadata,orders.nft_order,orders.token_id,orders.nft_id,collections.name AS collection_name,collections.metadata AS collection_metadata FROM nft.orders LEFT JOIN nft.collections ON orders.token_id=collections.token_id WHERE is_valid=1", async function (err, result, fields)
 				{
