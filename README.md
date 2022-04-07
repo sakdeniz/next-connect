@@ -66,7 +66,7 @@ Response
 CancelSellNftOrder
 ```
 Cancels a previously created NFT sell order.
-POST Parameters
+POST Parameters  
 ```
 {
   "proof": {}
@@ -84,7 +84,7 @@ Response
 CreateNftProof
 ```
 Creates a NFT Proof for given project id.  
-POST Parameters
+POST Parameters  
 ```
 {
   "project_id": 1,
