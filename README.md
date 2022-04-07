@@ -46,7 +46,7 @@ Response
 CreateSellNftOrder
 ```
 Creates an NFT sell order.  
-POST Parameters
+POST Parameters  
 ```
 {
   "order": {},
@@ -95,7 +95,7 @@ POST Parameters
 Response
 ```
 {
-  "status": "success",
-  "message": "NFT sell order successfully cancelled."
+  "status": "verified",
+  "proof": {}
 }
 ```
