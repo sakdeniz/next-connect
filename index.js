@@ -1,36 +1,26 @@
 var mysql = require('mysql');
 var http=require('http');
-var https = require('https');
 var server;
 var argv=require('minimist')(process.argv.slice(2));
 const config={headers: {'Content-Type': 'application/x-www-form-urlencoded'},responseType: 'text'};
 const ElectrumClient = require('@aguycalled/electrum-client-js')
 const fs = require('fs');
-
-/*const options = {
-  key: fs.readFileSync('key.pem'),
-  cert: fs.readFileSync('cert.pem')
-};*/
-	global.window = global;
-	const setGlobalVars = require("indexeddbshim");
-	setGlobalVars(null, { checkOrigin: false });
-
-	const njs = require("navcoin-js");
-	const repl = require("repl");
-
-	const walletFile = undefined; // File name of the wallet database, persistence using dexie db backend only works on the browser
-	const password = undefined; // Password used to encrypt and open the wallet database
-	const spendingPassword = undefined; // Password used to send transactions
-	const mnemonic = "bracket shrug kit web three run stem resist barrel spring bounce clock"
-	const type = undefined; // Wallet type next, navcoin-core or navcoin-js-v1
-	const zapwallettxes = false; // Should the wallet be cleared of its history?
-	const log = true; // Log to console
-	const network = "testnet";
-
-	let wallet;
-
-	const prompt = repl.start("> ");
-
+const setGlobalVars = require("indexeddbshim");
+const njs = require("navcoin-js");
+const repl = require("repl");
+const walletFile = undefined; // File name of the wallet database, persistence using dexie db backend only works on the browser
+const password = undefined; // Password used to encrypt and open the wallet database
+const spendingPassword = undefined; // Password used to send transactions
+const mnemonic = "bracket shrug kit web three run stem resist barrel spring bounce clock"
+const type = undefined; // Wallet type next, navcoin-core or navcoin-js-v1
+const zapwallettxes = false; // Should the wallet be cleared of its history?
+const log = true; // Log to console
+const network = "testnet";
+require('dotenv').config();
+global.window = global;
+setGlobalVars(null, { checkOrigin: false });
+let wallet;
+const prompt = repl.start("> ");
 async function main()
 {
 	njs.wallet.Init().then(async () => {
@@ -99,9 +89,9 @@ async function main()
 		'wss'
 	)
 	var con = mysql.createConnection({
-		host: "185.87.120.30",
-		user: "nft",
-		password: "0CvSbExX6yNlLGqk"
+		host: process.env.MYSQL_HOST,
+		user: process.env.MYSQL_USER,
+		password: process.env.MYSQL_PASSWORD
 	});
 
 	con.connect(function(err)
