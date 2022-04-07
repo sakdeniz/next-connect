@@ -316,7 +316,7 @@ async function main()
 					}
 				});
 			}
-			if (req.url=="/NftProof")
+			if (req.url=="/CreateNftProof")
 			{
 				console.log("Verifying NFT Ownership Proof -> " + post.proof.tokenId + "(" + post.proof.nftId + ")");
 				let hex=Buffer.from(post.proof.sig).toString('hex');
