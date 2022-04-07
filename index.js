@@ -35,6 +35,8 @@ async function main()
 	    network: network,
 	  });
 
+	  console.log("navcoin-js build " + njs.version);
+	  console.log("bitcore-lib build " + njs.wallet.bitcore.version);
 	  prompt.context.wallet = wallet;
 
 	  wallet.on("new_mnemonic", (mnemonic) =>
