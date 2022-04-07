@@ -32,4 +32,14 @@ http://localhost:3000/{function}
 ```
 GetSellOrders
 ```
-Returns all active sell orders
+Returns all active sell orders in JSON format.
+
+Response
+```
+{status:"success",orders:result}
+```
+
+```
+CreateSellNftOrder
+```
+Creates an NFT sell order.
