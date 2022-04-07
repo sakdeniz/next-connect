@@ -412,6 +412,7 @@ async function main()
 		con.query("SELECT token_id FROM nft.collections WHERE token_id='"+token_id+"' LIMIT 1", async function (err, result, fields)
 		{
 			if (err) throw err;
+			console.log("Result length-> " + result.length);
 			if (result.length<1)
 			{
 				console.log("Fetching NFT collection data...");
