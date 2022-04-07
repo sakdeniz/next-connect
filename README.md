@@ -36,7 +36,10 @@ Returns all active sell orders in JSON format.
 
 Response
 ```
-{status:"success",orders:result}
+{
+  "status": "success",
+  "orders": []
+}
 ```
 
 ```
