@@ -61,3 +61,41 @@ Response
   "order": {}
 }
 ```
+
+```
+CancelSellNftOrder
+```
+Cancels a previously created NFT sell order.
+POST Parameters
+```
+{
+  "proof": {}
+}
+```
+Response
+```
+{
+  "status": "verified",
+  "proof": {}
+}
+```
+
+```
+CreateNftProof
+```
+Creates a NFT Proof for given project id.  
+POST Parameters
+```
+{
+  "project_id": 1,
+  "private_address": "xN...",
+  "proof": {}
+}
+```
+Response
+```
+{
+  "status": "success",
+  "message": "NFT sell order successfully cancelled."
+}
+```

@@ -191,7 +191,7 @@ async function main()
 					sendResponse(res, 200,JSON.stringify(obj))
 				});
 			}
-			if (req.url=="/CancelOrder")
+			if (req.url=="/CancelSellNftOrder")
 			{
 				console.log("Checking NFT order exist -> " + post.proof.tokenId + "(" + post.proof.nftId + ")");
 				con.query("SELECT * FROM nft.orders WHERE token_id='"+post.proof.tokenId+"' AND nft_id="+post.proof.nftId+" AND is_valid=1", function (err, result, fields)
@@ -214,7 +214,7 @@ async function main()
 								{
 									if (err) throw err;
 									console.log("NFT order cancelled -> " + post.proof.tokenId + "(" + post.proof.nftId + ")");
-									let obj={status:"success"};
+									let obj={status:"success",message:"NFT sell order successfully cancelled."};
 									sendResponse(res, 200,JSON.stringify(obj));
 								});
 							}
@@ -222,7 +222,7 @@ async function main()
 					}
 					else
 					{
-						console.log("NFT order not exist.");
+						console.log("NFT sell order doest not exist.");
 						let obj={status:"nft_sell_order_does_not_exist",message:"NFT sell order does not exist."};
 						sendResponse(res, 200,JSON.stringify(obj));
 					}
@@ -316,14 +316,9 @@ async function main()
 					}
 				});
 			}
-			if (req.url=="/proof")
+			if (req.url=="/NftProof")
 			{
-				console.log("Proof");
-				console.log(post.proof);
-				console.log("Result");
-				console.log(post.result);
-				//
-				console.log("Verifying NFT -> " + post.proof.tokenId + "(" + post.proof.nftId + ")");
+				console.log("Verifying NFT Ownership Proof -> " + post.proof.tokenId + "(" + post.proof.nftId + ")");
 				let hex=Buffer.from(post.proof.sig).toString('hex');
 				let proof={nftId:parseInt(post.proof.nftId),tokenId:post.proof.tokenId.toString(),sig:Buffer.from(hex,'hex')};
 				wallet.VerifyNftProof(post.proof.tokenId.toString(),parseInt(post.proof.nftId),proof).then((retval) =>
@@ -333,7 +328,7 @@ async function main()
 					{
 						console.log("NFT ownership verified -> " + post.proof.tokenId + "(" + post.proof.nftId + ")");
 						create_nft_collection(post.proof.tokenId);
-						con.query("SELECT * FROM nft.proofs WHERE project_id='"+post.project_id+"' AND private_address='"+post.private_address+"' AND token_id='"+post.proof.tokenId.toString()+"' AND nft_id='"+post.proof.nftId+"' AND hash='"+post.result.txid+"'", function (err, result, fields)
+						con.query("SELECT * FROM nft.proofs WHERE project_id='"+post.project_id+"' AND private_address='"+post.private_address+"' AND token_id='"+post.proof.tokenId.toString()+"' AND nft_id='"+post.proof.nftId+"' AND hash='"+retval.txid+"' AND nout="+retval.nout+"", function (err, result, fields)
 						{
 							if (err) throw err;
 							if (result.length==0)
@@ -356,8 +351,8 @@ async function main()
 								    '`+post.private_address+`',
 								    '`+post.proof.tokenId.toString()+`',
 								    '`+post.proof.nftId+`',
-								    '`+post.result.txid+`',
-								    '`+post.result.nout+`',
+								    '`+retval.txid+`',
+								    '`+retval.nout+`',
 								    NULL,
 								    NOW(),
 								    '1'
