@@ -14,7 +14,7 @@ npm install
 ```
 The script stores NFT ownership, NFT sales orders and NFT Collection data in MySQL database.
 You should create a MySQL database and import database.sql file.
-In order to connect to the MySQL database server, you must create a file named .env in the folder where the script is located and add the following lines.
+In order to connect to the MySQL database server, you must create a file named ```.env``` in the folder where the script is located and add the following lines.
 ```
 MYSQL_HOST="localhost"
 MYSQL_USER="database_name_here"
