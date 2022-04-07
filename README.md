@@ -10,5 +10,17 @@ The script has been developed for Nodejs 16.0.0 and NPM 7.1.0.
 git clone https://github.com/sakdeniz/next-connect.git
 cd next-connect
 npm install
+```
+The script stores NFT ownership, nft sales orders and collection data in MySQL database.
+You should create a MySQL database and import database.sql file.
+In order to connect to the MySQL database server, you must create a file named .env in the folder where the script is located and add the following lines.
+```
+MYSQL_HOST="localhost"
+MYSQL_USER="database_name_here"
+MYSQL_PASSWORD="password_here"
+```
+After completing the steps required for MySQL connection, you can run the script.
+```
 screen node index.js
 ```
+When you run the script, it will start listening for incoming requests for the API on port 3000.
