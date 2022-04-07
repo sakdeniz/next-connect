@@ -26,8 +26,8 @@ screen node index.js
 ```
 When you run the script, it will start listening for incoming requests for the API on port 3000.
 # Request parameters
-Requests should be made in accordance with the URL structure below.
-http://localhost:3000/{function}
+Requests should be made in accordance with the URL structure below.  
+```http://localhost:3000/{function}```
 
 # Functions
 ```
