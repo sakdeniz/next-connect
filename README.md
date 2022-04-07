@@ -1,10 +1,11 @@
 # next-connect
  
 # Purpose
-This script allows wallet or web applications to access nft sell orders and nft information with proven ownership.
+This script allows wallet or web applications to access NFT sell orders, NFT collections and NFT information with proven ownership.
 
 # Requirements
 The script has been developed for Nodejs 16.0.0 and NPM 7.1.0.
+
 # Install Steps
 ```
 git clone https://github.com/sakdeniz/next-connect.git
@@ -30,7 +31,7 @@ http://localhost:3000/{function}
 
 # Functions
 ```
-GetSellOrders
+GetNftSellOrders
 ```
 Returns all active sell orders in JSON format.
 
