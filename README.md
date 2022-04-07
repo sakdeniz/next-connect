@@ -66,7 +66,7 @@ Response
 ```
 CancelSellNftOrder
 ```
-Cancels a previously created NFT sell order.
+Cancels a previously created NFT sell order.  
 POST Parameters  
 ```
 {
