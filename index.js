@@ -294,7 +294,7 @@ async function main()
 											console.log("Subscribing nft sell order -> " + retval.txid + "->" + retval.nout);
 											let currentStatus = await client.blockchain_outpoint_subscribe(retval.txid,retval.nout);
 											verifyStatus([[retval.txid, retval.nout], currentStatus]);
-											let obj={status:"order_created",proof:post.proof};
+											let obj={status:"order_created",message:"Order created",proof:post.proof};
 											sendResponse(res, 200,JSON.stringify(obj));
 										}
 									});

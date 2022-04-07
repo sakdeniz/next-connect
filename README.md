@@ -46,3 +46,18 @@ Response
 CreateSellNftOrder
 ```
 Creates an NFT sell order.
+POST Parameters
+```
+{
+  "order": {},
+  "proof": {}
+}
+```
+Response
+```
+{
+  "status": "order_created",
+  "message": "Order created",
+  "order": {}
+}
+```
