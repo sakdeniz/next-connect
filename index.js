@@ -356,7 +356,7 @@ async function main()
 								    NOW(),
 								    '1'
 								);`;
-								con.query(sql, function (err, result)
+								con.query(sql, async function (err, result)
 								{
 									if (err)
 									{
