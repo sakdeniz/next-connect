@@ -290,7 +290,6 @@ async function main()
 										else
 										{
 											console.log("NFT sell order record added to database.");
-											
 											console.log("Subscribing nft sell order -> " + retval.txid + "->" + retval.nout);
 											let currentStatus = await client.blockchain_outpoint_subscribe(retval.txid,retval.nout);
 											verifyStatus([[retval.txid, retval.nout], currentStatus]);
@@ -366,6 +365,9 @@ async function main()
 									else
 									{
 										console.log("NFT ownership record added to database.");
+										console.log("Subscribing nft proof -> " + retval.txid + "->" + retval.nout);
+										let currentStatus = await client.blockchain_outpoint_subscribe(retval.txid,retval.nout);
+										verifyStatus([[retval.txid, retval.nout], currentStatus]);
 										let obj={status:"verified",proof:post.proof};
 										console.log(sendResponse(res, 200,JSON.stringify(obj)));
 									}
