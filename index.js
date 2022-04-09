@@ -239,7 +239,7 @@ async function main()
 				let hex=Buffer.from(post.proof.sig).toString('hex');
 				let proof={nftId:parseInt(post.proof.nftId),tokenId:post.proof.tokenId.toString(),sig:Buffer.from(hex,'hex')};
 				console.log("Verifying Order");
-				wallet.VerifyOrder(post.order).then((result) =>()
+				wallet.VerifyOrder(post.order).then((result) =>
 				{
 					console.log(result);
 				})
