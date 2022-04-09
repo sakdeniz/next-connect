@@ -236,9 +236,19 @@ async function main()
 				console.log(post.order);
 				console.log(token_id);
 				console.log(nft_id);
-				console.log("Verifying NFT -> " + post.proof.tokenId + "(" + post.proof.nftId + ")");
 				let hex=Buffer.from(post.proof.sig).toString('hex');
 				let proof={nftId:parseInt(post.proof.nftId),tokenId:post.proof.tokenId.toString(),sig:Buffer.from(hex,'hex')};
+				console.log("Verifying Order");
+				wallet.VerifyOrder(post.order).then((result) =>()
+				{
+					console.log(result);
+				})
+				.catch((e) =>
+				{
+					console.log("Error while verifying order");
+					console.log(e);
+				});
+				console.log("Verifying NFT -> " + post.proof.tokenId + "(" + post.proof.nftId + ")");
 				wallet.VerifyNftProof(post.proof.tokenId.toString(),parseInt(post.proof.nftId),proof).then((retval) =>
 				{
 					console.log(retval);
