@@ -247,6 +247,7 @@ async function main()
 				{
 					console.log("Error while verifying order");
 					console.log(e);
+					console.log(e.stack);
 				});
 				console.log("Verifying NFT -> " + post.proof.tokenId + "(" + post.proof.nftId + ")");
 				wallet.VerifyNftProof(post.proof.tokenId.toString(),parseInt(post.proof.nftId),proof).then((retval) =>
