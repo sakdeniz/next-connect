@@ -242,10 +242,10 @@ async function main()
 				console.log(nft_id);
 				let hex=Buffer.from(post.proof.sig).toString('hex');
 				let proof={nftId:parseInt(post.proof.nftId),tokenId:post.proof.tokenId.toString(),sig:Buffer.from(hex,'hex')};
-				console.log("Verifying Order");
+				console.log("Verifying Order..");
 				wallet.VerifyOrder(post.order).then((result) =>
 				{
-					console.log(result);
+					console.log("Verify order result -> " + result);
 				})
 				.catch((e) =>
 				{
