@@ -294,7 +294,7 @@ async function main()
 									    NOW(),
 									    '1'
 									);`;
-									console.log(sql);
+									//console.log(sql);
 									con.query(sql,[JSON.stringify(nftinfo)], async function (err, result)
 									{
 										if (err)
