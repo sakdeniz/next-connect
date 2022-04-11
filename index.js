@@ -90,6 +90,10 @@ async function main()
 		40004,
 		'wss'
 	)
+	console.log(process.env.MYSQL_HOST);
+	console.log(process.env.MYSQL_USER);
+	console.log(process.env.MYSQL_PASSWORD);
+
 	var con = mysql.createConnection({
 		host: process.env.MYSQL_HOST,
 		user: process.env.MYSQL_USER,
