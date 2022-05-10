@@ -360,6 +360,7 @@ async function main()
 								let sql = `INSERT INTO nft.proofs(
 								    id,
 								    project_id,
+								    link_code,
 								    private_address,
 								    token_id,
 								    nft_id,
@@ -372,6 +373,7 @@ async function main()
 								VALUES(
 								    NULL,
 								    '`+post.project_id+`',
+								    '`+post.link_code+`',
 								    '`+post.private_address+`',
 								    '`+post.proof.tokenId.toString()+`',
 								    '`+post.proof.nftId+`',
@@ -423,7 +425,35 @@ async function main()
 			else if (req.url=="/CheckQR")
 			{
 				console.log("Checking QR code -> " + post.code);
-				let obj=[{status:"success",message:"Success",nfts:[{id:1,name:'a'},{id:2,name:'b'}]}];
+				try
+				{
+					let arr=[];
+					for (const [token_id, collection] of Object.entries(collections))
+					{
+						console.log(collection);
+						for (const [nft_id,nft] of Object.entries(collection.confirmed))
+						{
+							let nft_data=JSON.parse(nft);
+							arr.push(
+							{
+								token_id:token_id,
+								nft_id:nft_id,
+								collection_name:collection.name,
+								name:nft_data.name,
+								family_id:nft_data.attributes.family_id,
+								description:nft_data.description,
+								nft_category:(nft_data.category?nft_data.category:null),
+								nft_sub_category:(nft_data.sub_category?nft_data.sub_category:null),
+								image:nft_data.image,
+							});
+						}
+					}
+					console.log(arr);
+				}
+				catch(e)
+				{
+				}
+				let obj=[{status:"success",message:"Success",nfts:JSON.stringify(arr)}];
 				sendResponse(res, 200,JSON.stringify(obj));
 			}
 			else
