@@ -425,6 +425,7 @@ async function main()
 			else if (req.url=="/CheckQR")
 			{
 				console.log("Checking QR code...");
+				console.log(post);
 				console.log(post.code);
 			}
 			else
