@@ -423,7 +423,7 @@ async function main()
 			else if (req.url=="/CheckQR")
 			{
 				console.log("Checking QR code -> " + post.code);
-				let obj=[{status:"success",message:"Success",nfts:[]];
+				let obj=[{status:"success",message:"Success",nfts:[]}];
 				sendResponse(res, 200,JSON.stringify(obj));
 			}
 			else
