@@ -424,6 +424,7 @@ async function main()
 			{
 				console.log("Checking QR code -> " + post.code);
 				let obj={status:"success",code:post.code};
+				sendResponse(res, 200,JSON.stringify(obj));
 			}
 			else
 			{
