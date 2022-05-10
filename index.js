@@ -195,7 +195,7 @@ async function main()
 					sendResponse(res, 200,JSON.stringify(obj))
 				});
 			}
-			if (req.url=="/CancelSellNftOrder")
+			else if (req.url=="/CancelSellNftOrder")
 			{
 				console.log("Checking NFT order exist -> " + post.proof.tokenId + "(" + post.proof.nftId + ")");
 				con.query("SELECT * FROM nft.orders WHERE token_id='"+post.proof.tokenId+"' AND nft_id="+post.proof.nftId+" AND is_valid=1", function (err, result, fields)
@@ -232,7 +232,7 @@ async function main()
 					}
 				});
 			}
-			if (req.url=="/CreateSellNftOrder")
+			else if (req.url=="/CreateSellNftOrder")
 			{
 				let token_id=post.order.receive[0].tokenId;
 				let nft_id=post.order.receive[0].tokenNftId;
@@ -331,7 +331,7 @@ async function main()
 					}
 				});
 			}
-			if (req.url=="/CreateNftProof")
+			else if (req.url=="/CreateNftProof")
 			{
 				console.log("Verifying NFT Ownership Proof -> " + post.proof.tokenId + "(" + post.proof.nftId + ")");
 				let hex=Buffer.from(post.proof.sig).toString('hex');
@@ -410,6 +410,11 @@ async function main()
 					console.log("Error while verifying nft proof");
 					console.log(e);
 				});
+			}
+			else
+			{
+				let obj={status:"failed",message:"Unsupported request url"};
+				sendResponse(res, 200,JSON.stringify(obj));
 			}
 		});
 	});
