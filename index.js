@@ -183,7 +183,6 @@ async function main()
 		req.on('end', function ()
 		{
 			var post={};
-			console.log(body);
 			try
 			{
 				post=JSON.parse(body);
@@ -419,6 +418,10 @@ async function main()
 					console.log("Error while verifying nft proof");
 					console.log(e);
 				});
+			}
+			else if (req.url=="/CheckQR")
+			{
+				console.log(body.code);
 			}
 			else
 			{
