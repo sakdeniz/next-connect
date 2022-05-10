@@ -182,11 +182,9 @@ async function main()
 		});
 		req.on('end', function ()
 		{
-			console.log("body -> " + body);
 			var post;
 			try
 			{
-				console.log("Parsing json...");
 				post=body?JSON.parse(body) : {}
 				console.log(post);
 			}
@@ -424,9 +422,7 @@ async function main()
 			}
 			else if (req.url=="/CheckQR")
 			{
-				console.log("Checking QR code...");
-				console.log(post);
-				console.log(post.code);
+				console.log("Checking QR code -> " + post.code);
 			}
 			else
 			{
