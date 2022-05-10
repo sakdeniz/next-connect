@@ -182,6 +182,7 @@ async function main()
 		});
 		req.on('end', function ()
 		{
+			console.log(body);
 			var post={};
 			try
 			{
