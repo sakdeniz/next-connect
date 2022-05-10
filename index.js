@@ -183,6 +183,7 @@ async function main()
 		req.on('end', function ()
 		{
 			var post={};
+			console.log(body);
 			try
 			{
 				post=JSON.parse(body);
