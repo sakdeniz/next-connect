@@ -187,6 +187,7 @@ async function main()
 			try
 			{
 				post=JSON.parse(body);
+				console.log(post);
 			}
 			catch (err)
 			{
