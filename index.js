@@ -182,12 +182,12 @@ async function main()
 		});
 		req.on('end', function ()
 		{
-			console.log(body);
+			console.log("body -> " + body);
 			var post;
 			try
 			{
-				post=body?JSON.parse(body) : {}
 				console.log("Parsing json...");
+				post=body?JSON.parse(body) : {}
 				console.log(post);
 			}
 			catch (err)
