@@ -182,7 +182,15 @@ async function main()
 		});
 		req.on('end', function ()
 		{
-			var post=body?JSON.parse(body) : {}
+			var post={};
+			try
+			{
+				post=JSON.parse(body);
+			}
+			catch (err)
+			{
+				console.error(err)
+			}
 			var now=new Date(); 
 			var datetime=now.getHours()+':'+now.getMinutes()+':'+now.getSeconds(); 
 			console.log(datetime + " " + req.url);
