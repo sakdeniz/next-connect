@@ -444,9 +444,9 @@ async function main()
 							{
 								arr.push(
 								{
-									token_id:result.token_id,
-									nft_id:result.nft_id,
-									collection_name:result.name,
+									token_id:e.token_id,
+									nft_id:e.nft_id,
+									collection_name:e.name,
 									name:null,
 									family_id:null,
 									description:null,
