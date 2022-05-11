@@ -449,7 +449,7 @@ async function main()
 									nft_id:e.nft_id,
 									collection_name:e.name,
 									name:(metadata.name?metadata.name:null),
-									family_id:(metadata.family_id?metadata.family_id:null),
+									family_id:(metadata.attributes.family_id?metadata.attributes.family_id:null),
 									description:(metadata.description?metadata.description:null),
 									nft_category:(metadata.category?metadata.category:null),
 									nft_sub_category:(metadata.sub_category?metadata.sub_category:null),
