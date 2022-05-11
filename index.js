@@ -429,7 +429,7 @@ async function main()
 				let arr=[];
 				try
 				{
-					let sql="SELECT proofs.token_id,proofs.nft_id,collections.name,nfts.metadata FROM nft.proofs INNER JOIN collections ON proofs.token_id=collections.token_id INNER JOIN nfts ON proofs.token_id=nfts.token_id AND proofs.nft_id=nfts.nft_id WHERE proofs.link_code='"+post.code + "'";
+					let sql="SELECT proofs.token_id,proofs.nft_id,collections.name,nfts.metadata FROM nft.proofs INNER JOIN nft.collections ON proofs.token_id=collections.token_id INNER JOIN nft.nfts ON proofs.token_id=nfts.token_id AND proofs.nft_id=nfts.nft_id WHERE proofs.link_code='"+post.code + "'";
 					con.query(sql, async function (err, result, fields)
 					{
 						if (err) throw err;
