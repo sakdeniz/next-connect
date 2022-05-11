@@ -437,6 +437,8 @@ async function main()
 						if (result.length<1)
 						{
 							console.log("No matching proof...");
+							let obj=[{status:"failed",message:"No matching proof...",nfts:arr}];
+							sendResponse(res, 200,JSON.stringify(obj));
 						}
 						else
 						{
