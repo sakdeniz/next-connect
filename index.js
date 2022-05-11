@@ -429,6 +429,34 @@ async function main()
 				let arr=[];
 				try
 				{
+					let sql="SELECT proofs.token_id,proofs.nft_id,collections.name,nfts.metadata FROM proofs INNER JOIN collections ON proofs.token_id=collections.token_id INNER JOIN nfts ON proofs.token_id=nfts.token_id AND proofs.nft_id=nfts.nft_id WHERE proofs.link_code='"+post.code + "'";
+					con.query(sql, async function (err, result, fields)
+					{
+						if (err) throw err;
+						console.log("Result length-> " + result.length);
+						if (result.length<1)
+						{
+							console.log("No matching proof...");
+						}
+						else
+						{
+							for (let e of result)
+							{
+								arr.push(
+								{
+									token_id:result.token_id,
+									nft_id:result.nft_id,
+									collection_name:result.name
+									name:null,
+									family_id:null,
+									description:null,
+									nft_category:null,
+									nft_sub_category:null,
+									image:null,
+								});
+							}
+						}
+					});
 					console.log(arr);
 				}
 				catch(e)
