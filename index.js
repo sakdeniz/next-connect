@@ -446,7 +446,7 @@ async function main()
 								{
 									token_id:result.token_id,
 									nft_id:result.nft_id,
-									collection_name:result.name
+									collection_name:result.name,
 									name:null,
 									family_id:null,
 									description:null,
