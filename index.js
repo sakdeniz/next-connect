@@ -425,9 +425,9 @@ async function main()
 			else if (req.url=="/CheckQR")
 			{
 				console.log("Checking QR code -> " + post.code);
+				let arr=[];
 				try
 				{
-					let arr=[];
 					console.log(arr);
 				}
 				catch(e)
