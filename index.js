@@ -272,6 +272,7 @@ async function main()
 						console.log("NFT ownership verified -> " + post.proof.tokenId + "(" + post.proof.nftId + ")");
 						console.log("Fetching NFT collection metadata -> " + post.proof.tokenId);
 						create_nft_collection(post.proof.tokenId);
+						create_nft(post.proof.tokenId,post.proof.nftId);
 						console.log("Fetching NFT metadata -> " + post.proof.tokenId + "(" + post.proof.nftId + ")");
 						wallet.GetNftInfo(post.proof.tokenId.toString(),parseInt(post.proof.nftId)).then((nftinfo) =>
 						{
@@ -482,6 +483,34 @@ async function main()
 		});
 	}
 
+
+	function create_nft(token_id,nft_id)
+	{
+		console.log("Checking NFT...");
+		con.query("SELECT token_id,nft_id FROM nft.nfts WHERE token_id='"+token_id+"' AND nft_id='"+nft_id+"' LIMIT 1", async function (err, result, fields)
+		{
+			if (err) throw err;
+			console.log("Result length-> " + result.length);
+			if (result.length<1)
+			{
+				console.log("Fetching NFT data...");
+				wallet.GetNftInfo(token_id,nft_id).then((nft_info) =>
+				{
+					console.log(nft_info);
+					console.log("Creating NFT...");
+					con.query("INSERT INTO nft.nfts SET token_id='"+token_id+"',nft_id="+nft_id+",metadata=?",[nft_info.metadata], async function (err, result, fields)
+					{
+						if (err) throw err;
+						console.log("NFT created...");
+					});
+				});
+			}
+			else
+			{
+				console.log("NFT already exist...");
+			}
+		});
+	}
 	function subscribe_nfts()
 	{
 		console.log("Subscribing for verified nfts...");
