@@ -442,17 +442,18 @@ async function main()
 						{
 							for (let e of result)
 							{
+								metadata=JSON.parse(e.metadata);
 								arr.push(
 								{
 									token_id:e.token_id,
 									nft_id:e.nft_id,
 									collection_name:e.name,
-									name:null,
-									family_id:null,
-									description:null,
-									nft_category:null,
-									nft_sub_category:null,
-									image:null,
+									name:(metadata.name?metadata.name:null),
+									family_id:(metadata.family_id?metadata.family_id:null),
+									description:(metadata.description?metadata.description:null),
+									nft_category:(metadata.category?metadata.category:null),
+									nft_sub_category:(metadata.sub_category?metadata.sub_category:null),
+									image:(metadata.image?metadata.image:null),
 								});
 							}
 							let obj=[{status:"success",message:"Success",nfts:arr}];
