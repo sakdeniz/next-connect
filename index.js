@@ -437,7 +437,7 @@ async function main()
 						if (result.length<1)
 						{
 							console.log("No matching proof...");
-							let obj=[{status:"failed",message:"No matching proof...",nfts:arr}];
+							let obj=[{status:"success",message:"No matching proof...",nfts:arr}];
 							sendResponse(res, 200,JSON.stringify(obj));
 						}
 						else
@@ -466,11 +466,13 @@ async function main()
 				}
 				catch(e)
 				{
+					let obj=[{status:"failed",message:"Failed"}];
+					sendResponse(res, 200,JSON.stringify(obj));
 				}
 			}
 			else
 			{
-				let obj={status:"failed",message:"Unsupported request url"};
+				let obj={status:"failed",message:"Unsupported request URL"};
 				sendResponse(res, 200,JSON.stringify(obj));
 			}
 		});
