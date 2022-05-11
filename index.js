@@ -433,7 +433,7 @@ async function main()
 				catch(e)
 				{
 				}
-				let obj=[{status:"success",message:"Success",nfts:JSON.stringify(arr)}];
+				let obj=[{status:"success",message:"Success",nfts:arr}];
 				sendResponse(res, 200,JSON.stringify(obj));
 			}
 			else
