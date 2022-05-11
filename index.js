@@ -436,8 +436,8 @@ async function main()
 						console.log("Result length-> " + result.length);
 						if (result.length<1)
 						{
-							console.log("No matching proof...");
-							let obj=[{status:"success",message:"No matching proof...",nfts:arr}];
+							console.log("No NFT found...");
+							let obj=[{status:"success",message:"No NFT found...",nfts:arr}];
 							sendResponse(res, 200,JSON.stringify(obj));
 						}
 						else
