@@ -455,6 +455,8 @@ async function main()
 									image:null,
 								});
 							}
+							let obj=[{status:"success",message:"Success",nfts:arr}];
+							sendResponse(res, 200,JSON.stringify(obj));
 						}
 					});
 					console.log(arr);
@@ -462,8 +464,6 @@ async function main()
 				catch(e)
 				{
 				}
-				let obj=[{status:"success",message:"Success",nfts:arr}];
-				sendResponse(res, 200,JSON.stringify(obj));
 			}
 			else
 			{
