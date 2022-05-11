@@ -428,26 +428,6 @@ async function main()
 				try
 				{
 					let arr=[];
-					for (const [token_id, collection] of Object.entries(collections))
-					{
-						console.log(collection);
-						for (const [nft_id,nft] of Object.entries(collection.confirmed))
-						{
-							let nft_data=JSON.parse(nft);
-							arr.push(
-							{
-								token_id:token_id,
-								nft_id:nft_id,
-								collection_name:collection.name,
-								name:nft_data.name,
-								family_id:nft_data.attributes.family_id,
-								description:nft_data.description,
-								nft_category:(nft_data.category?nft_data.category:null),
-								nft_sub_category:(nft_data.sub_category?nft_data.sub_category:null),
-								image:nft_data.image,
-							});
-						}
-					}
 					console.log(arr);
 				}
 				catch(e)
