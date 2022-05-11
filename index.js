@@ -272,7 +272,6 @@ async function main()
 						console.log("NFT ownership verified -> " + post.proof.tokenId + "(" + post.proof.nftId + ")");
 						console.log("Fetching NFT collection metadata -> " + post.proof.tokenId);
 						create_nft_collection(post.proof.tokenId);
-						create_nft(post.proof.tokenId,post.proof.nftId);
 						console.log("Fetching NFT metadata -> " + post.proof.tokenId + "(" + post.proof.nftId + ")");
 						wallet.GetNftInfo(post.proof.tokenId.toString(),parseInt(post.proof.nftId)).then((nftinfo) =>
 						{
@@ -353,6 +352,7 @@ async function main()
 					{
 						console.log("NFT ownership verified -> " + post.proof.tokenId + "(" + post.proof.nftId + ")");
 						create_nft_collection(post.proof.tokenId);
+						create_nft(post.proof.tokenId,post.proof.nftId);
 						con.query("SELECT * FROM nft.proofs WHERE project_id='"+post.project_id+"' AND private_address='"+post.private_address+"' AND token_id='"+post.proof.tokenId.toString()+"' AND nft_id='"+post.proof.nftId+"' AND hash='"+retval.txid+"' AND nout="+retval.nout+"", function (err, result, fields)
 						{
 							if (err) throw err;
