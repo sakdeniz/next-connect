@@ -31,7 +31,7 @@ log4js.configure({
     default: { appenders: [ 'out', 'app' ], level: 'debug' }
   }
 });
-var logger = log4js.getLogger('debug'); 
+var logger = log4js.getLogger('API'); 
 async function main()
 {
 	njs.wallet.Init().then(async () => {
