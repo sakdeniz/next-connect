@@ -8,6 +8,7 @@
     "@babel/runtime": "^7.17.8",
     "babel-loader": "^8.2.4",
     "dotenv": "^16.0.0",
+    "log4js": "^6.4.7",
     "mysql": "^2.18.1",
     "navcoin-js": "^1.1.62"
   }
