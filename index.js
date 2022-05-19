@@ -448,7 +448,7 @@ async function main()
 						if (result.length<1)
 						{
 							logger.info("No NFT found...");
-							let obj=[{status:"success",message:"No NFT found...",nfts:arr}];
+							let obj={status:"success",message:"No NFT found...",nfts:arr};
 							sendResponse(res, 200,JSON.stringify(obj));
 						}
 						else
