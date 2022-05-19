@@ -469,7 +469,7 @@ async function main()
 									image:(metadata.image?metadata.image:null),
 								});
 							}
-							let obj=[{status:"success",message:"Success",nfts:arr}];
+							let obj={status:"success",message:"Success",nfts:arr};
 							sendResponse(res, 200,JSON.stringify(obj));
 						}
 					});
@@ -477,7 +477,7 @@ async function main()
 				}
 				catch(e)
 				{
-					let obj=[{status:"failed",message:"Failed"}];
+					let obj={status:"failed",message:"Failed"};
 					sendResponse(res, 200,JSON.stringify(obj));
 				}
 			}
