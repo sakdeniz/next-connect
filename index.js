@@ -594,6 +594,10 @@ async function main()
 		console.error(err)
 	}
 	server.listen(argv.p || 3000);
+	process.on('uncaughtException', function(err)
+	{
+		logger.error('Caught exception: ' + err);
+	});
 	logger.info('Server running on port ' + (argv.p || 3000))
 }
 main();
