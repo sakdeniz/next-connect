@@ -194,6 +194,7 @@ async function main()
 		req.on('end', function ()
 		{
 			var post;
+			logger.info(body);
 			try
 			{
 				post=body?JSON.parse(body) : {}
