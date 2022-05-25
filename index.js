@@ -201,7 +201,7 @@ async function main()
 			}
 			catch (err)
 			{
-				console.error(err)
+				logger.error(err)
 			}
 			var now=new Date(); 
 			var datetime=now.getHours()+':'+now.getMinutes()+':'+now.getSeconds(); 
@@ -591,7 +591,7 @@ async function main()
 	}
 	catch (err)
 	{
-		console.error(err)
+		logger.error(err)
 	}
 	server.listen(argv.p || 3000);
 	process.on('uncaughtException', function(err)
