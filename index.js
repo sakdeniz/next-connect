@@ -599,6 +599,14 @@ async function main()
 	{
 		logger.error('Caught exception: ' + err);
 	});
+	process.on('beforeExit', (code) =>
+	{
+		logger.log(`beforeExit code: ${code}`);
+	});
+	process.on('exit', (code) =>
+	{
+		logger.log(`exit code: ${code}`);
+	});
 	logger.info('Server running on port ' + (argv.p || 3000))
 }
 main();
