@@ -105,17 +105,19 @@ async function main()
 	logger.info(process.env.MYSQL_USER);
 	logger.info(process.env.MYSQL_PASSWORD);
 
-	var con = mysql.createConnection({
+	var con = mysql.createPool({
 		host: process.env.MYSQL_HOST,
 		user: process.env.MYSQL_USER,
-		password: process.env.MYSQL_PASSWORD
+		password: process.env.MYSQL_PASSWORD,
+		connectionLimit:1024
 	});
 
-	con.connect(function(err)
+	/*con.connect(function(err)
 	{
 		if (err) throw err;
 		logger.info("Connected to MySQL server.");
-	});
+	});*/
+	
 	function invalidateProof(s)
 	{
 		logger.info("NFT Moved");
