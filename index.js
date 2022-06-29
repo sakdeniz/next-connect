@@ -27,27 +27,6 @@ const prompt = repl.start("> ");
 var logger = log4js.getLogger('API'); 
 async function main()
 {
-	const args = process.argv.slice(2);
-	args.forEach(arg =>
-	{
-		let arga = arg.split("=");
-		console.log(arga[0]+"->"+arga[1]);
-		if (arga[0]=="network")
-		{
-			network=arga[1];
-			if (arga[1]=="mainnet")
-			{
-				network_id="1";
-				port=3000;
-			}
-			if (arga[1]=="testnet")
-			{
-				network_id="2";
-				port=3001;
-			}
-		}
-	});
-	server.listen(argv.p || port);
 	log4js.configure({
 	  appenders: {
 	    out: { type: 'stdout' },
@@ -56,7 +35,7 @@ async function main()
 	  categories: {
 	    default: { appenders: [ 'out', 'app' ], level: 'debug' }
 	  }
-	});
+	});	
 	njs.wallet.Init().then(async () => {
 	  wallet = new njs.wallet.WalletFile({
 	    file: walletFile,
@@ -612,6 +591,26 @@ async function main()
 			}
 		});
 	}
+	const args = process.argv.slice(2);
+	args.forEach(arg =>
+	{
+		let arga = arg.split("=");
+		console.log(arga[0]+"->"+arga[1]);
+		if (arga[0]=="network")
+		{
+			network=arga[1];
+			if (arga[1]=="mainnet")
+			{
+				network_id="1";
+				port=3000;
+			}
+			if (arga[1]=="testnet")
+			{
+				network_id="2";
+				port=3001;
+			}
+		}
+	});
 	
 	try
 	{
@@ -625,6 +624,8 @@ async function main()
 	{
 		logger.error(err)
 	}
+
+	server.listen(argv.p || port);
 	process.on('uncaughtException', function(err)
 	{
 		logger.error('Caught exception: ' + err);
