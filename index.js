@@ -235,7 +235,7 @@ async function main()
 			logger.info(datetime + " " + req.url);
 			if (req.url=="/GetNftSellOrders")
 			{
-				con.query("SELECT orders.metadata,orders.nft_order,orders.token_id,orders.nft_id,collections.name AS collection_name,collections.metadata AS collection_metadata FROM nft.orders LEFT JOIN nft.collections ON orders.token_id=collections.token_id WHERE is_valid=1 AND network_id="+network_id, async function (err, result, fields)
+				con.query("SELECT orders.metadata,orders.nft_order,orders.token_id,orders.nft_id,collections.name AS collection_name,collections.metadata AS collection_metadata FROM nft.orders LEFT JOIN nft.collections ON orders.token_id=collections.token_id WHERE is_valid=1 AND nft.orders.network_id="+network_id, async function (err, result, fields)
 				{
 					if (err) throw err;
 					let obj={status:"success",orders:result};
@@ -471,7 +471,7 @@ async function main()
 				let arr=[];
 				try
 				{
-					let sql="SELECT proofs.token_id,proofs.nft_id,collections.name,nfts.metadata FROM nft.proofs INNER JOIN nft.collections ON proofs.token_id=collections.token_id INNER JOIN nft.nfts ON proofs.token_id=nfts.token_id AND proofs.nft_id=nfts.nft_id WHERE proofs.link_code='"+post.code + "' AND network_id="+network_id;
+					let sql="SELECT proofs.token_id,proofs.nft_id,collections.name,nfts.metadata FROM nft.proofs INNER JOIN nft.collections ON proofs.token_id=collections.token_id INNER JOIN nft.nfts ON proofs.token_id=nfts.token_id AND proofs.nft_id=nfts.nft_id WHERE proofs.link_code='"+post.code + "' AND proofs.network_id="+network_id;
 					con.query(sql, async function (err, result, fields)
 					{
 						if (err) throw err;
