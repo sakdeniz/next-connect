@@ -47,6 +47,7 @@ async function main()
 			}
 		}
 	});
+	server.listen(argv.p || port);
 	log4js.configure({
 	  appenders: {
 	    out: { type: 'stdout' },
@@ -55,7 +56,7 @@ async function main()
 	  categories: {
 	    default: { appenders: [ 'out', 'app' ], level: 'debug' }
 	  }
-	});	
+	});
 	njs.wallet.Init().then(async () => {
 	  wallet = new njs.wallet.WalletFile({
 	    file: walletFile,
@@ -624,7 +625,6 @@ async function main()
 	{
 		logger.error(err)
 	}
-	server.listen(argv.p || port);
 	process.on('uncaughtException', function(err)
 	{
 		logger.error('Caught exception: ' + err);
