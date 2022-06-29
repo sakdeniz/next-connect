@@ -18,7 +18,7 @@ const zapwallettxes = false; // Should the wallet be cleared of its history?
 const log = true; // Log to console
 var network;
 var network_id;
-const port=3000;
+var port;
 require('dotenv').config();
 global.window = global;
 setGlobalVars(null, { checkOrigin: false });
