@@ -27,6 +27,26 @@ const prompt = repl.start("> ");
 var logger = log4js.getLogger('API'); 
 async function main()
 {
+	let args = process.argv.slice(2);
+	args.forEach(arg =>
+	{
+		let arga = arg.split("=");
+		console.log(arga[0]+"->"+arga[1]);
+		if (arga[0]=="-network")
+		{
+			network=arga[1];
+			if (arga[1]=="mainnet")
+			{
+				network_id="1";
+				port=3000;
+			}
+			if (arga[1]=="testnet")
+			{
+				network_id="2";
+				port=3001;
+			}
+		}
+	});
 	log4js.configure({
 	  appenders: {
 	    out: { type: 'stdout' },
@@ -35,7 +55,7 @@ async function main()
 	  categories: {
 	    default: { appenders: [ 'out', 'app' ], level: 'debug' }
 	  }
-	});	
+	});
 	njs.wallet.Init().then(async () => {
 	  wallet = new njs.wallet.WalletFile({
 	    file: walletFile,
@@ -45,7 +65,7 @@ async function main()
 	    spendingPassword: spendingPassword,
 	    zapwallettxes: zapwallettxes,
 	    log: log,
-	    network: network,
+	    network: network
 	  });
 
 	  logger.info("navcoin-js build " + njs.version);
@@ -591,27 +611,6 @@ async function main()
 			}
 		});
 	}
-	const args = process.argv.slice(2);
-	args.forEach(arg =>
-	{
-		let arga = arg.split("=");
-		console.log(arga[0]+"->"+arga[1]);
-		if (arga[0]=="-network")
-		{
-			network=arga[1];
-			if (arga[1]=="mainnet")
-			{
-				network_id="1";
-				port=3000;
-			}
-			if (arga[1]=="testnet")
-			{
-				network_id="2";
-				port=3001;
-			}
-		}
-	});
-	
 	try
 	{
 		await client.connect(
