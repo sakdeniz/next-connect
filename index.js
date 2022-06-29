@@ -37,12 +37,12 @@ async function main()
 			network=arga[1];
 			if (arga[1]=="mainnet")
 			{
-				network_id="1";
+				network_id=1;
 				port=3000;
 			}
 			if (arga[1]=="testnet")
 			{
-				network_id="2";
+				network_id=2;
 				port=3001;
 			}
 		}
