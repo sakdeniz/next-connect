@@ -514,7 +514,7 @@ async function main()
 			}
 			else
 			{
-				let obj={status:"failed",message:"Unsupported request URL"};
+				let obj={status:"failed",message:"Unsupported request URL",network:network, network_id:network_id, port:port};
 				sendResponse(res, 200,JSON.stringify(obj));
 			}
 		});
