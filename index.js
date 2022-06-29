@@ -596,7 +596,7 @@ async function main()
 	{
 		let arga = arg.split("=");
 		console.log(arga[0]+"->"+arga[1]);
-		if (arga[0]=="network")
+		if (arga[0]=="-network")
 		{
 			network=arga[1];
 			if (arga[1]=="mainnet")
