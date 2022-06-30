@@ -311,9 +311,9 @@ async function main()
 						logger.info("Fetching NFT collection metadata -> " + post.proof.tokenId);
 						create_nft_collection(post.proof.tokenId);
 						logger.info("Fetching NFT metadata -> " + post.proof.tokenId + "(" + post.proof.nftId + ")");
-						wallet.GetNftInfo(post.proof.tokenId.toString(),parseInt(post.proof.nftId)).then((nftinfo) =>
+						wallet.GetNftInfo(post.proof.tokenId.toString(),parseInt(post.proof.nftId)).then((nft_info) =>
 						{
-							logger.info(nftinfo);
+							logger.info(nft_info);
 							con.query("SELECT * FROM nft.orders WHERE token_id='"+token_id+"' AND nft_id='"+nft_id+"' AND is_valid=1 AND network_id="+network_id, function (err, result, fields)
 							{
 								if (err) throw err;
@@ -344,7 +344,7 @@ async function main()
 									    `+network_id+`
 									);`;
 									//logger.info(sql);
-									con.query(sql,[JSON.stringify(nftinfo)], async function (err, result)
+									con.query(sql,[JSON.stringify(nft_info[0])], async function (err, result)
 									{
 										if (err)
 										{
@@ -573,7 +573,7 @@ async function main()
 				{
 					logger.info(nft_info);
 					logger.info("Creating NFT...");
-					con.query("INSERT INTO nft.nfts SET token_id='"+token_id+"',nft_id="+nft_id+",metadata=?,network_id="+network_id,[nft_info.metadata], async function (err, result, fields)
+					con.query("INSERT INTO nft.nfts SET token_id='"+token_id+"',nft_id="+nft_id+",metadata=?,network_id="+network_id,[nft_info[0].metadata], async function (err, result, fields)
 					{
 						if (err) throw err;
 						logger.info("NFT created...");
