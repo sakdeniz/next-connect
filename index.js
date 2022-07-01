@@ -151,15 +151,13 @@ async function main()
 		logger.info(sql);
 		con.query(sql, function (err, result, fields)
 		{
-			console.log(sql);
 			if (err) throw err;
 			if (result.length==1)
 			{
 				let sql = "UPDATE nft.proofs SET `invalidated_date`=NOW(),`new_hash`='"+s[1].spender_txhash+"',`is_valid` = '0' WHERE proofs.hash='"+s[0][0]+"' AND network_id="+network_id+";";
-				console.log(sql);
+				logger.info(sql);
 				con.query(sql, function (err, result)
 				{
-					console.log(result);
 					if (err)
 					{
 						logger.info("NFT ownership (proof) cannot invalidated -> " + err);
@@ -183,6 +181,7 @@ async function main()
 			if (result.length==1)
 			{
 				let sql = "UPDATE nft.orders SET `invalidated_date`=NOW(),`new_hash`='"+s[1].spender_txhash+"',`is_valid` = '0' WHERE orders.hash='"+s[0][0]+"' AND network_id="+network_id+";";
+				logger.info(sql);
 				con.query(sql, function (err, result)
 				{
 					if (err)
