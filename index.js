@@ -93,10 +93,10 @@ async function main()
 	    await wallet.Connect();
 	  });
 
-	  wallet.on("connected", () => logger.info("connected. waiting for sync"));
+	  wallet.on("connected", (server) => logger.info(`connected to ${server}. waiting for sync`));
 
 	  wallet.on("sync_status", async (progress, pending) => {
-	    logger.info(`Sync ${progress}%`);
+	    logger.info(`Sync ${progress}%, Pending ${pending}`);
 	  });
 
 	  wallet.on("db_load_error", async (err) => {
