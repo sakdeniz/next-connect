@@ -147,8 +147,7 @@ async function main()
 		logger.info("NFT Moved");
 		logger.info("Old hash -> " + s[0][0]);
 		logger.info("New hash -> " + s[1].spender_txhash);
-		let table="proofs";
-		let sql="SELECT id FROM nft."+table+" WHERE hash='"+s[0][0]+"' AND is_valid=1 AND network_id="+network_id+" LIMIT 1;";
+		let sql="SELECT id FROM nft.proofs WHERE hash='"+s[0][0]+"' AND is_valid=1 AND network_id="+network_id+" LIMIT 1;";
 		logger.info(sql);
 		con.query(sql, function (err, result, fields)
 		{
@@ -156,7 +155,7 @@ async function main()
 			if (err) throw err;
 			if (result.length==1)
 			{
-				let sql = "UPDATE nft."+table+" SET `invalidated_date`=NOW(),`new_hash`='"+s[1].spender_txhash+"',`is_valid` = '0' WHERE "+table+".hash='"+s[0][0]+"' AND network_id="+network_id+";";
+				let sql = "UPDATE nft.proofs SET `invalidated_date`=NOW(),`new_hash`='"+s[1].spender_txhash+"',`is_valid` = '0' WHERE proofs.hash='"+s[0][0]+"' AND network_id="+network_id+";";
 				console.log(sql);
 				con.query(sql, function (err, result)
 				{
@@ -176,15 +175,14 @@ async function main()
 				logger.info("NFT ownership (proof) already invalidated.");
 			}
 		});
-		table="orders";
-		sql="SELECT id FROM nft."+table+" WHERE hash='"+s[0][0]+"' AND is_valid=1 AND network_id="+network_id+" LIMIT 1;";
-		//logger.info(sql);
+		sql="SELECT id FROM nft.orders WHERE hash='"+s[0][0]+"' AND is_valid=1 AND network_id="+network_id+" LIMIT 1;";
+		logger.info(sql);
 		con.query(sql, function (err, result, fields)
 		{
 			if (err) throw err;
 			if (result.length==1)
 			{
-				let sql = "UPDATE nft."+table+" SET `invalidated_date`=NOW(),`new_hash`='"+s[1].spender_txhash+"',`is_valid` = '0' WHERE "+table+".hash='"+s[0][0]+"' AND network_id="+network_id+";";
+				let sql = "UPDATE nft.orders SET `invalidated_date`=NOW(),`new_hash`='"+s[1].spender_txhash+"',`is_valid` = '0' WHERE orders.hash='"+s[0][0]+"' AND network_id="+network_id+";";
 				con.query(sql, function (err, result)
 				{
 					if (err)
