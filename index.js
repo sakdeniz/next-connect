@@ -235,7 +235,7 @@ async function main()
 			logger.info(datetime + " " + req.url);
 			if (req.url=="/GetNftSellOrders")
 			{
-				con.query("SELECT orders.metadata,orders.nft_order,orders.token_id,orders.nft_id,collections.name AS collection_name,collections.metadata AS collection_metadata FROM nft.orders LEFT JOIN nft.collections ON orders.token_id=collections.token_id WHERE is_valid=1 AND nft.orders.network_id="+network_id, async function (err, result, fields)
+				con.query("SELECT orders.metadata,orders.nft_order,orders.token_id,orders.nft_id,orders.verification_date,collections.name AS collection_name,collections.metadata AS collection_metadata FROM nft.orders LEFT JOIN nft.collections ON orders.token_id=collections.token_id WHERE is_valid=1 AND nft.orders.network_id="+network_id, async function (err, result, fields)
 				{
 					if (err) throw err;
 					let obj={status:"success",orders:result};
