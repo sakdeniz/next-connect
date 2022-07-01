@@ -157,6 +157,7 @@ async function main()
 			if (result.length==1)
 			{
 				let sql = "UPDATE nft."+table+" SET `invalidated_date`=NOW(),`new_hash`='"+s[1].spender_txhash+"',`is_valid` = '0' WHERE "+table+".hash='"+s[0][0]+"' AND network_id="+network_id+";";
+				console.log(sql);
 				con.query(sql, function (err, result)
 				{
 					console.log(result);
