@@ -526,10 +526,9 @@ async function main()
 
 	const verifyStatus = (s) => 
 	{
-		logger.info("Verifying status -> " + s);
+		logger.info("Verifying status...");
 		if (s[1] && s[1].spender_txhash)
 		{
-			logger.info("Invalidating proof -> " + s);
 			invalidateProof(s);
 		}
 	}
