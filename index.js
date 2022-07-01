@@ -158,6 +158,7 @@ async function main()
 				let sql = "UPDATE nft."+table+" SET `invalidated_date`=NOW(),`new_hash`='"+s[1].spender_txhash+"',`is_valid` = '0' WHERE "+table+".hash='"+s[0][0]+"' AND network_id="+network_id+";";
 				con.query(sql, function (err, result)
 				{
+					console.log(result);
 					if (err)
 					{
 						logger.info("NFT ownership (proof) cannot invalidated -> " + err);
