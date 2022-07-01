@@ -93,7 +93,11 @@ async function main()
 	    await wallet.Connect();
 	  });
 
-	  wallet.on("connected", (server) => logger.info(`connected to ${server}. waiting for sync`));
+	  wallet.on("connected", (server) =>
+	  {
+	  	logger.info(`connected to ${server}. waiting for sync`);
+		subscribe_nfts();
+	  });
 
 	  wallet.on("sync_status", async (progress, pending) => {
 	    logger.info(`Sync ${progress}%, Pending ${pending}`);
@@ -558,7 +562,6 @@ async function main()
 		});
 	}
 
-
 	function create_nft(token_id,nft_id)
 	{
 		logger.info("Checking NFT...");
@@ -617,7 +620,6 @@ async function main()
 			'electrum-client-js', // optional client name
 			'1.5' // optional protocol version
 		)
-		subscribe_nfts();
 	}
 	catch (err)
 	{
