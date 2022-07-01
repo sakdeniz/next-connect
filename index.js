@@ -149,9 +149,10 @@ async function main()
 		logger.info("New hash -> " + s[1].spender_txhash);
 		let table="proofs";
 		let sql="SELECT id FROM nft."+table+" WHERE hash='"+s[0][0]+"' AND is_valid=1 AND network_id="+network_id+" LIMIT 1;";
-		//logger.info(sql);
+		logger.info(sql);
 		con.query(sql, function (err, result, fields)
 		{
+			console.log(sql);
 			if (err) throw err;
 			if (result.length==1)
 			{
