@@ -623,21 +623,39 @@ async function main()
 	}
 	catch (err)
 	{
-		logger.error(err)
+		logger.error(err);
 	}
 
 	server.listen(argv.p || port);
+	process.on('uncaughtExceptionMonitor', (err, origin) =>
+	{
+		logger.info("uncaughtExceptionMonitor");
+		logger.info(err);
+		logger.info(origin);
+		logger.info('FATAL!');
+	});
+	process.on('unhandledRejection', (reason, p) => {
+		logger.info("unhandledRejection");
+		logger.info(reason + ' => Unhandled Rejection at Promise: ' + p);
+		logger.info('FATAL!');
+	})
 	process.on('uncaughtException', function(err)
 	{
-		logger.error('Caught exception: ' + err);
+		logger.info("uncaughtException");
+		logger.error(err);
+		logger.info('FATAL!');
 	});
 	process.on('beforeExit', (code) =>
 	{
-		logger.log(`beforeExit code: ${code}`);
+		logger.info("beforeExit");
+		logger.log(`code: ${code}`);
+		logger.info('FATAL!');
 	});
 	process.on('exit', (code) =>
 	{
-		logger.log(`exit code: ${code}`);
+		logger.info("exit");
+		logger.log(`code: ${code}`);
+		logger.info('FATAL!');
 	});
 	logger.info('Server running on port ' + (argv.p || port))
 }
