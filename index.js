@@ -633,33 +633,34 @@ async function main()
 	server.listen(argv.p || port);
 	process.on('uncaughtExceptionMonitor', (err, origin) =>
 	{
-		logger.info("uncaughtExceptionMonitor");
-		logger.info(err);
-		logger.info(origin);
-		logger.info('FATAL!');
+		logger.error("uncaughtExceptionMonitor");
+		logger.error(err);
+		logger.error(origin);
+		logger.error('FATAL!');
 	});
 	process.on('unhandledRejection', (reason, p) => {
-		logger.info("unhandledRejection");
-		logger.info(reason + ' => Unhandled Rejection at Promise: ' + p);
-		logger.info('FATAL!');
+		logger.error("unhandledRejection");
+		logger.error(reason + ' => Unhandled Rejection at Promise');
+		logger.error(p);
+		logger.error('FATAL!');
 	})
 	process.on('uncaughtException', function(err)
 	{
-		logger.info("uncaughtException");
+		logger.error("uncaughtException");
 		logger.error(err);
-		logger.info('FATAL!');
+		logger.error('FATAL!');
 	});
 	process.on('beforeExit', (code) =>
 	{
-		logger.info("beforeExit");
-		logger.log(`code: ${code}`);
-		logger.info('FATAL!');
+		logger.error("beforeExit");
+		logger.error(`code: ${code}`);
+		logger.error('FATAL!');
 	});
 	process.on('exit', (code) =>
 	{
-		logger.info("exit");
-		logger.log(`code: ${code}`);
-		logger.info('FATAL!');
+		logger.error("exit");
+		logger.error(`code: ${code}`);
+		logger.error('FATAL!');
 	});
 	logger.info('Server running on port ' + (argv.p || port))
 }
