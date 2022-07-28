@@ -142,7 +142,7 @@ async function main()
 
 	/*con.connect(function(err)
 	{
-		if (err) throw err;
+		if (err) logger.error(err);
 		logger.info("Connected to MySQL server.");
 	});*/
 	
@@ -155,7 +155,7 @@ async function main()
 		logger.info(sql);
 		con.query(sql, function (err, result, fields)
 		{
-			if (err) throw err;
+			if (err) logger.error(err);
 			if (result.length==1)
 			{
 				let sql = "UPDATE nft.proofs SET `invalidated_date`=NOW(),`new_hash`='"+s[1].spender_txhash+"',`is_valid` = '0' WHERE proofs.hash='"+s[0][0]+"' AND network_id="+network_id+";";
@@ -164,6 +164,7 @@ async function main()
 				{
 					if (err)
 					{
+						logger.error(err);
 						logger.info("NFT ownership (proof) cannot invalidated -> " + err);
 					}
 					else
@@ -181,7 +182,7 @@ async function main()
 		logger.info(sql);
 		con.query(sql, function (err, result, fields)
 		{
-			if (err) throw err;
+			if (err) logger.error(err);
 			if (result.length==1)
 			{
 				let sql = "UPDATE nft.orders SET `invalidated_date`=NOW(),`new_hash`='"+s[1].spender_txhash+"',`is_valid` = '0' WHERE orders.hash='"+s[0][0]+"' AND network_id="+network_id+";";
@@ -190,6 +191,7 @@ async function main()
 				{
 					if (err)
 					{
+						logger.error(err);
 						logger.info("NFT ownership (order) cannot invalidated -> " + err);
 					}
 					else
@@ -241,7 +243,7 @@ async function main()
 			{
 				con.query("SELECT orders.metadata,orders.nft_order,orders.token_id,orders.nft_id,orders.verification_date,collections.name AS collection_name,collections.metadata AS collection_metadata FROM nft.orders LEFT JOIN nft.collections ON orders.token_id=collections.token_id WHERE is_valid=1 AND nft.orders.network_id="+network_id, async function (err, result, fields)
 				{
-					if (err) throw err;
+					if (err) logger.error(err);
 					let obj={status:"success",orders:result};
 					sendResponse(res, 200,JSON.stringify(obj))
 				});
@@ -251,7 +253,7 @@ async function main()
 				logger.info("Checking NFT order exist -> " + post.proof.tokenId + "(" + post.proof.nftId + ")");
 				con.query("SELECT * FROM nft.orders WHERE token_id='"+post.proof.tokenId+"' AND nft_id="+post.proof.nftId+" AND is_valid=1 AND network_id="+network_id, function (err, result, fields)
 				{
-					if (err) throw err;
+					if (err) logger.error(err);
 					if (result.length>0)
 					{
 						logger.info("NFT order exist.");
@@ -267,7 +269,7 @@ async function main()
 								logger.info("Cancelling NFT order -> " + post.proof.tokenId + "(" + post.proof.nftId + ")");
 								con.query("UPDATE nft.orders SET is_valid=0 WHERE token_id='"+post.proof.tokenId.toString()+"' AND nft_id="+post.proof.nftId+" AND is_valid=1 AND network_id="+network_id, async function (err, result, fields)
 								{
-									if (err) throw err;
+									if (err) logger.error(err);
 									logger.info("NFT order cancelled -> " + post.proof.tokenId + "(" + post.proof.nftId + ")");
 									let obj={status:"success",message:"NFT sell order successfully cancelled."};
 									sendResponse(res, 200,JSON.stringify(obj));
@@ -320,7 +322,7 @@ async function main()
 							logger.info(nft_info);
 							con.query("SELECT * FROM nft.orders WHERE token_id='"+token_id+"' AND nft_id='"+nft_id+"' AND is_valid=1 AND network_id="+network_id, function (err, result, fields)
 							{
-								if (err) throw err;
+								if (err) logger.error(err);
 								if (result.length==0)
 								{
 									let sql = `INSERT INTO nft.orders(
@@ -352,6 +354,7 @@ async function main()
 									{
 										if (err)
 										{
+											logger.error(err);
 											let obj={status:"failed",message:"Database error.",order:post.order};
 											logger.info(obj);
 											logger.info("NFT sell order record not added -> " + err);
@@ -399,7 +402,7 @@ async function main()
 						create_nft(post.proof.tokenId,post.proof.nftId);
 						con.query("SELECT * FROM nft.proofs WHERE project_id='"+post.project_id+"' AND link_code='"+post.link_code+"' AND private_address='"+post.private_address+"' AND token_id='"+post.proof.tokenId.toString()+"' AND nft_id='"+post.proof.nftId+"' AND hash='"+retval.txid+"' AND nout="+retval.nout+" AND network_id="+network_id, function (err, result, fields)
 						{
-							if (err) throw err;
+							if (err) logger.error(err);
 							if (result.length==0)
 							{
 								let sql = `INSERT INTO nft.proofs(
@@ -434,6 +437,7 @@ async function main()
 								{
 									if (err)
 									{
+										logger.error(err);
 										logger.info("NFT ownership record not added -> " + err);
 									}
 									else
@@ -478,7 +482,7 @@ async function main()
 					let sql="SELECT proofs.token_id,proofs.nft_id,collections.name,nfts.metadata FROM nft.proofs INNER JOIN nft.collections ON proofs.token_id=collections.token_id INNER JOIN nft.nfts ON proofs.token_id=nfts.token_id AND proofs.nft_id=nfts.nft_id WHERE proofs.link_code='"+post.code + "' AND proofs.network_id="+network_id;
 					con.query(sql, async function (err, result, fields)
 					{
-						if (err) throw err;
+						if (err) logger.error(err);
 						logger.info("Result length-> " + result.length);
 						if (result.length<1)
 						{
@@ -539,7 +543,7 @@ async function main()
 		logger.info("Checking NFT collection...");
 		con.query("SELECT token_id FROM nft.collections WHERE token_id='"+token_id+"' AND network_id="+network_id+" LIMIT 1", async function (err, result, fields)
 		{
-			if (err) throw err;
+			if (err) logger.error(err);
 			logger.info("Result length-> " + result.length);
 			if (result.length<1)
 			{
@@ -550,7 +554,7 @@ async function main()
 					logger.info("Creating NFT collection...");
 					con.query("INSERT INTO nft.collections SET token_id='"+token_id+"',name='"+token_info.name+"',supply="+token_info.supply+",version="+token_info.version+",metadata=?,network_id="+network_id,[token_info.code], async function (err, result, fields)
 					{
-						if (err) throw err;
+						if (err) logger.error(err);
 						logger.info("NFT collection created...");
 					});
 				});
@@ -567,7 +571,7 @@ async function main()
 		logger.info("Checking NFT...");
 		con.query("SELECT token_id,nft_id FROM nft.nfts WHERE token_id='"+token_id+"' AND nft_id='"+nft_id+"' AND network_id="+network_id+" LIMIT 1", async function (err, result, fields)
 		{
-			if (err) throw err;
+			if (err) logger.error(err);
 			logger.info("Result length-> " + result.length);
 			if (result.length<1)
 			{
@@ -578,7 +582,7 @@ async function main()
 					logger.info("Creating NFT...");
 					con.query("INSERT INTO nft.nfts SET token_id='"+token_id+"',nft_id="+nft_id+",metadata=?,network_id="+network_id,[nft_info[0].metadata], async function (err, result, fields)
 					{
-						if (err) throw err;
+						if (err) logger.error(err);
 						logger.info("NFT created...");
 					});
 				});
@@ -594,7 +598,7 @@ async function main()
 		logger.info("Subscribing for verified nfts...");
 		con.query("SELECT hash,nout FROM nft.proofs WHERE is_valid=1 AND network_id="+network_id, async function (err, result, fields)
 		{
-			if (err) throw err;
+			if (err) logger.error(err);
 			for (let e of result)
 			{
 				logger.info("Subscribing for nft proof -> " + e.hash + "->" + e.nout);
@@ -605,7 +609,7 @@ async function main()
 		logger.info("Subscribing for nft sell orders...");
 		con.query("SELECT hash,nout FROM nft.orders WHERE is_valid=1 AND network_id="+network_id, async function (err, result, fields)
 		{
-			if (err) throw err;
+			if (err) logger.error(err);
 			for (let e of result)
 			{
 				logger.info("Subscribing nft sell order -> " + e.hash + "->" + e.nout);
