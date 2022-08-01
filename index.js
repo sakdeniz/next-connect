@@ -89,7 +89,8 @@ async function main()
 	      "NAV receiving address: " +
 	        (await wallet.NavReceivingAddresses(true))[0].address
 	    );
-
+		wallet.ClearNodeList();
+		wallet.AddNode('electrum.nextwallet.org', 40004, 'wss');
 	    await wallet.Connect();
 	  });
 
