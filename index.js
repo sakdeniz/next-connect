@@ -100,6 +100,36 @@ async function main()
 		subscribe_nfts();
 	  });
 
+	  wallet.on("disconnected", () =>
+	  {
+	  	logger.info(`disconnected from node`);
+	  });
+
+	  wallet.on("disconnected", () =>
+	  {
+	  	logger.info(`disconnected from node`);
+	  });
+
+	  wallet.on("no_servers_available", () =>
+	  {
+	  	logger.info(`no_servers_available`);
+	  });
+
+	  wallet.on("no_servers_available", () =>
+	  {
+	  	logger.info(`no_servers_available`);
+	  });
+
+	  wallet.on("db_open", () =>
+	  {
+	  	logger.info(`db_open`);
+	  });
+
+	  wallet.on("db_closed", () =>
+	  {
+	  	logger.info(`db_closed`);
+	  });
+
 	  wallet.on("sync_status", async (progress, pending) => {
 	    logger.info(`Sync ${progress}%, Pending ${pending}`);
 	  });
