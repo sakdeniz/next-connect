@@ -90,8 +90,8 @@ async function main()
 	        (await wallet.NavReceivingAddresses(true))[0].address
 	    );
 		wallet.ClearNodeList();
-		wallet.AddNode('electrum.nextwallet.org', 40004, 'wss');
-	    await wallet.Connect();
+		wallet.AddNode((network=="mainnet"?'electrum.nextwallet.org':'electrum-testnet.nav.community'), 40004, 'wss');
+		await wallet.Connect();
 	  });
 
 	  wallet.on("connected", (server) =>
@@ -126,7 +126,7 @@ async function main()
 
 
 	const client = new ElectrumClient(
-		'electrum-testnet.nav.community',
+		(network=="mainnet"?'electrum.nextwallet.org':'electrum-testnet.nav.community'),
 		40004,
 		'wss'
 	)
@@ -317,6 +317,7 @@ async function main()
 						logger.info("NFT ownership verified -> " + post.proof.tokenId + "(" + post.proof.nftId + ")");
 						logger.info("Fetching NFT collection metadata -> " + post.proof.tokenId);
 						create_nft_collection(post.proof.tokenId);
+						create_nft(token_id,nft_id);
 						logger.info("Fetching NFT metadata -> " + post.proof.tokenId + "(" + post.proof.nftId + ")");
 						wallet.GetNftInfo(post.proof.tokenId.toString(),parseInt(post.proof.nftId)).then((nft_info) =>
 						{
