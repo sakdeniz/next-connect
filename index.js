@@ -151,6 +151,7 @@ async function main()
 
 	  await wallet.Load({
 	    bootstrap: njs.wallet.xNavBootstrap,
+	    useP2p:false
 	  });
 	});
 
