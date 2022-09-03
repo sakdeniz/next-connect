@@ -426,7 +426,7 @@ async function main()
 				logger.info(post.order);
 				let tokenInId=post.order.pay[0].tokenId;
 				let tokenOutId=post.order.receive[0].tokenId;
-				con.query("SELECT * FROM nft.token_orders WHERE order_data='"+JSON.parse(post.order)+"' AND is_valid=1 AND network_id="+network_id, function (err, result, fields)
+				con.query("SELECT * FROM nft.token_orders WHERE order_data='"+JSON.stringify(post.order)+"' AND is_valid=1 AND network_id="+network_id, function (err, result, fields)
 				{
 					if (err) logger.error(err);
 					if (result.length==0)
