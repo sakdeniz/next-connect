@@ -461,7 +461,7 @@ async function main()
 							if (err)
 							{
 								logger.error(err);
-								let obj={status:"failed",message:"Database error.",order:post.order};
+								let obj={status:"failed",message:"Database error."};
 								logger.info(obj);
 								logger.info("Token order record not added -> " + err);
 							}
