@@ -449,10 +449,10 @@ async function main()
 						    1,
 						    ?,
 						    '`+post.private_address+`',
-						    0',
+						    0,
 						    0,
 						    NOW(),
-						    '1',
+						    1,
 						    `+network_id+`
 						);`;
 						//logger.info(sql);
