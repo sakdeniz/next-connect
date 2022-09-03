@@ -424,6 +424,7 @@ async function main()
 			{
 				logger.info("Creating token order...");
 				logger.info(post.order);
+				logger.info("Address -> " + post.address);
 				let tokenInId=post.order.pay[0].tokenId;
 				let tokenOutId=post.order.receive[0].tokenId;
 				con.query("SELECT * FROM nft.token_orders WHERE order_data='"+JSON.stringify(post.order)+"' AND is_valid=1 AND network_id="+network_id, function (err, result, fields)
@@ -448,7 +449,7 @@ async function main()
 						    1,
 						    1,
 						    ?,
-						    '`+post.private_address+`',
+						    '`+post.address+`',
 						    0,
 						    0,
 						    NOW(),
