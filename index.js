@@ -420,6 +420,69 @@ async function main()
 					}
 				});
 			}
+			else if (req.url=="/CreateTokenOrder")
+			{
+				logger.info(post.order);
+				let tokenInId=post.order.pay[0].tokenId;
+				let tokenOutId=post.order.receive[0].tokenId;
+				con.query("SELECT * FROM nft.token_orders WHERE order_data='"+JSON.stringify(post.oder)+"' AND is_valid=1 AND network_id="+network_id, function (err, result, fields)
+				{
+					if (err) logger.error(err);
+					if (result.length==0)
+					{
+						let sql = `INSERT INTO nft.token_orders(
+						    order_id,
+						    order_pair_id,
+						    order_type,
+						    order_data,
+						    private_address,
+						    price,
+						    amount,
+						    created_at,
+						    is_valid,
+						    network_id
+						)
+						VALUES(
+						    NULL,
+						    1,
+						    1,
+						    ?,
+						    '`+post.private_address+`',
+						    0',
+						    0,
+						    NOW(),
+						    '1',
+						    `+network_id+`
+						);`;
+						//logger.info(sql);
+						con.query(sql,[JSON.stringify(post.order)], async function (err, result)
+						{
+							if (err)
+							{
+								logger.error(err);
+								let obj={status:"failed",message:"Database error.",order:post.order};
+								logger.info(obj);
+								logger.info("Token order record not added -> " + err);
+							}
+							else
+							{
+								logger.info("Token order record added to database.");
+								/*logger.info("Subscribing token order -> " + retval.txid + "->" + retval.nout);
+								let currentStatus = await client.blockchain_outpoint_subscribe(retval.txid,retval.nout);
+								verifyStatus([[retval.txid, retval.nout], currentStatus]);*/
+								let obj={status:"order_created",message:"Token order created"};
+								sendResponse(res, 200,JSON.stringify(obj));
+							}
+						});
+					}
+					else
+					{
+						let obj={status:"failed",message:"Token order already exist",order:post.order};
+						logger.info(obj);
+						sendResponse(res, 200,JSON.stringify(obj));
+					}
+				});
+			}
 			else if (req.url=="/CreateNftProof")
 			{
 				logger.info("Verifying NFT Ownership Proof -> " + post.proof.tokenId + "(" + post.proof.nftId + ")");
