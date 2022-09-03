@@ -422,6 +422,7 @@ async function main()
 			}
 			else if (req.url=="/CreateTokenOrder")
 			{
+				logger.info("Creating token order...");
 				logger.info(post.order);
 				let tokenInId=post.order.pay[0].tokenId;
 				let tokenOutId=post.order.receive[0].tokenId;
