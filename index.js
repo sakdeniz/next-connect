@@ -436,13 +436,13 @@ async function main()
 					if (result.length>0)
 					{
 						logger.info("Trading Pair found...");
-						for (let e of result)
+						for (let o of result)
 						{
-							logger.info("Trading Pair ID -> " + e.pair_id);
-							logger.info("Token 1 Name -> " + e.token_1_name);
-							logger.info("Token 1 ID -> " + e.token_1_id);
-							logger.info("Token 2 Name -> " + e.token_2_name);
-							logger.info("Token 2 ID -> " + e.token_2_id);
+							logger.info("Trading Pair ID -> " + o.pair_id);
+							logger.info("Token 1 Name -> " + o.token_1_name);
+							logger.info("Token 1 ID -> " + o.token_1_id);
+							logger.info("Token 2 Name -> " + o.token_2_name);
+							logger.info("Token 2 ID -> " + o.token_2_id);
 							con.query("SELECT * FROM nft.token_orders WHERE order_data='"+JSON.stringify(post.order)+"' AND is_valid=1 AND network_id="+network_id, function (err, result, fields)
 							{
 								if (err) logger.error(err);
@@ -462,7 +462,7 @@ async function main()
 									)
 									VALUES(
 									    NULL,
-									    1,
+									    `+o.pair_id+`,
 									    `+(post.orderType=="buy"?"1":"2")+`,
 									    ?,
 									    '`+post.address+`',
@@ -488,7 +488,7 @@ async function main()
 											/*logger.info("Subscribing token order -> " + retval.txid + "->" + retval.nout);
 											let currentStatus = await client.blockchain_outpoint_subscribe(retval.txid,retval.nout);
 											verifyStatus([[retval.txid, retval.nout], currentStatus]);*/
-											let obj={status:"order_created",message:"Token order ("+e.token_1_name+"/"+e.token_2_name+") successfully created."};
+											let obj={status:"order_created",message:"Token order ("+o.token_1_name+"/"+o.token_2_name+") successfully created."};
 											sendResponse(res, 200,JSON.stringify(obj));
 										}
 									});
