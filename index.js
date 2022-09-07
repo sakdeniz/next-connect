@@ -463,7 +463,7 @@ async function main()
 									VALUES(
 									    NULL,
 									    `+o.pair_id+`,
-									    `+(post.orderType=="buy"?"1":"2")+`,
+									    `+(post.orderType=="buy"?2:1)+`,
 									    ?,
 									    '`+post.address+`',
 									    0,
