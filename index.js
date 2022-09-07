@@ -398,7 +398,7 @@ async function main()
 											logger.info("Subscribing nft sell order -> " + retval.txid + "->" + retval.nout);
 											let currentStatus = await client.blockchain_outpoint_subscribe(retval.txid,retval.nout);
 											verifyStatus([[retval.txid, retval.nout], currentStatus]);
-											let obj={status:"order_created",message:"Order created",proof:post.proof};
+											let obj={status:"order_created",message:"NFT sell order successfully created.",proof:post.proof};
 											sendResponse(res, 200,JSON.stringify(obj));
 										}
 									});
@@ -488,7 +488,7 @@ async function main()
 											/*logger.info("Subscribing token order -> " + retval.txid + "->" + retval.nout);
 											let currentStatus = await client.blockchain_outpoint_subscribe(retval.txid,retval.nout);
 											verifyStatus([[retval.txid, retval.nout], currentStatus]);*/
-											let obj={status:"order_created",message:"Token order created"};
+											let obj={status:"order_created",message:"Token order ("+e.token_1_name+"/"+e.token_2_name+") successfully created."};
 											sendResponse(res, 200,JSON.stringify(obj));
 										}
 									});
