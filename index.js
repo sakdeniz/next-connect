@@ -427,59 +427,83 @@ async function main()
 				logger.info("Address -> " + post.address);
 				let tokenInId=post.order.pay[0].tokenId;
 				let tokenOutId=post.order.receive[0].tokenId;
-				con.query("SELECT * FROM nft.token_orders WHERE order_data='"+JSON.stringify(post.order)+"' AND is_valid=1 AND network_id="+network_id, function (err, result, fields)
+				con.query("SELECT pairs.pair_id,t1.token_id AS token_1_id,t1.token_name AS token_1_name,t2.token_id AS token_2_id,t2.token_name AS token_2_name, FROM pairs INNER JOIN tokens AS t1 on pairs.token_1_id=t1.token_id INNER JOIN tokens AS t2 ON pairs.token_2_id=t2.token_id WHERE t2.token_public_id"+(tokenInId!="0000000000000000000000000000000000000000000000000000000000000000"?"='"+tokenInId+"'":" IS NULL")" AND t1.token_public_id"+(tokenOutId!="0000000000000000000000000000000000000000000000000000000000000000"?"='"+tokenOutId+"'":" IS NULL")+" AND network_id="+network_id+" LIMIT 1", async function (err, result, fields)
 				{
 					if (err) logger.error(err);
-					if (result.length==0)
+					logger.info("Result length-> " + result.length);
+					if (result.length>0)
 					{
-						let sql = `INSERT INTO nft.token_orders(
-						    order_id,
-						    order_pair_id,
-						    order_type,
-						    order_data,
-						    private_address,
-						    price,
-						    amount,
-						    created_at,
-						    is_valid,
-						    network_id
-						)
-						VALUES(
-						    NULL,
-						    1,
-						    1,
-						    ?,
-						    '`+post.address+`',
-						    0,
-						    0,
-						    NOW(),
-						    1,
-						    `+network_id+`
-						);`;
-						//logger.info(sql);
-						con.query(sql,[JSON.stringify(post.order)], async function (err, result)
+						logger.info("Trading Pair found...");
+						for (let e of result)
 						{
-							if (err)
+							logger.info("Trading Pair ID -> " + e.pair_id);
+							logger.info("Token 1 Name -> " + e.token_1_name);
+							logger.info("Token 1 ID -> " + e.token_1_id);
+							logger.info("Token 2 Name -> " + e.token_2_name);
+							logger.info("Token 2 ID -> " + e.token_2_id);
+							con.query("SELECT * FROM nft.token_orders WHERE order_data='"+JSON.stringify(post.order)+"' AND is_valid=1 AND network_id="+network_id, function (err, result, fields)
 							{
-								logger.error(err);
-								let obj={status:"failed",message:"Database error."};
-								logger.info(obj);
-								logger.info("Token order record not added -> " + err);
-							}
-							else
-							{
-								logger.info("Token order record added to database.");
-								/*logger.info("Subscribing token order -> " + retval.txid + "->" + retval.nout);
-								let currentStatus = await client.blockchain_outpoint_subscribe(retval.txid,retval.nout);
-								verifyStatus([[retval.txid, retval.nout], currentStatus]);*/
-								let obj={status:"order_created",message:"Token order created"};
-								sendResponse(res, 200,JSON.stringify(obj));
-							}
-						});
+								if (err) logger.error(err);
+								if (result.length==0)
+								{
+									let sql = `INSERT INTO nft.token_orders(
+									    order_id,
+									    order_pair_id,
+									    order_type,
+									    order_data,
+									    private_address,
+									    price,
+									    amount,
+									    created_at,
+									    is_valid,
+									    network_id
+									)
+									VALUES(
+									    NULL,
+									    1,
+									    `+(post.orderType=="buy"?"1":"2")+`,
+									    ?,
+									    '`+post.address+`',
+									    0,
+									    0,
+									    NOW(),
+									    1,
+									    `+network_id+`
+									);`;
+									//logger.info(sql);
+									con.query(sql,[JSON.stringify(post.order)], async function (err, result)
+									{
+										if (err)
+										{
+											logger.error(err);
+											let obj={status:"failed",message:"Database error."};
+											logger.info(obj);
+											logger.info("Token order record not added -> " + err);
+										}
+										else
+										{
+											logger.info("Token order record added to database.");
+											/*logger.info("Subscribing token order -> " + retval.txid + "->" + retval.nout);
+											let currentStatus = await client.blockchain_outpoint_subscribe(retval.txid,retval.nout);
+											verifyStatus([[retval.txid, retval.nout], currentStatus]);*/
+											let obj={status:"order_created",message:"Token order created"};
+											sendResponse(res, 200,JSON.stringify(obj));
+										}
+									});
+								}
+								else
+								{
+									let obj={status:"failed",message:"Token order already exist",order:post.order};
+									logger.info(obj);
+									sendResponse(res, 200,JSON.stringify(obj));
+								}
+							});
+						}
 					}
 					else
 					{
-						let obj={status:"failed",message:"Token order already exist",order:post.order};
+						logger.info("Token Pair not found...");
+						let obj={status:"failed",message:"Token pair not found",order:post.order};
 						logger.info(obj);
 						sendResponse(res, 200,JSON.stringify(obj));
 					}
