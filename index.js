@@ -427,7 +427,7 @@ async function main()
 				logger.info("Address -> " + post.address);
 				let tokenInId=post.order.pay[0].tokenId;
 				let tokenOutId=post.order.receive[0].tokenId;
-				con.query("SELECT pairs.pair_id,t1.token_id AS token_1_id,t1.token_name AS token_1_name,t2.token_id AS token_2_id,t2.token_name AS token_2_name FROM nft.pairs INNER JOIN nft.tokens AS t1 on pairs.token_1_id=t1.token_id INNER JOIN nft.tokens AS t2 ON pairs.token_2_id=t2.token_id WHERE t2.token_public_id"+(tokenInId!="0000000000000000000000000000000000000000000000000000000000000000"?"='"+tokenInId+"'":" IS NULL")+" AND t1.token_public_id"+(tokenOutId!="0000000000000000000000000000000000000000000000000000000000000000"?"='"+tokenOutId+"'":" IS NULL")+" AND network_id="+network_id+" LIMIT 1", async function (err, result, fields)
+				con.query("SELECT pairs.pair_id,t1.token_id AS token_1_id,t1.token_name AS token_1_name,t2.token_id AS token_2_id,t2.token_name AS token_2_name FROM nft.pairs INNER JOIN nft.tokens AS t1 on pairs.token_1_id=t1.token_id INNER JOIN nft.tokens AS t2 ON pairs.token_2_id=t2.token_id WHERE t2.token_public_id"+(tokenInId!="0000000000000000000000000000000000000000000000000000000000000000"?"='"+tokenInId+"'":" IS NULL")+" AND t1.token_public_id"+(tokenOutId!="0000000000000000000000000000000000000000000000000000000000000000"?"='"+tokenOutId+"'":" IS NULL")+" LIMIT 1", async function (err, result, fields)
 				{
 					if (err) logger.error(err);
 					logger.info("Result length-> " + result.length);
