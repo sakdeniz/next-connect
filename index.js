@@ -609,7 +609,7 @@ async function main()
 					{
 						for (let e of result)
 						{
-							let obj={status:"success",order:e.order_data};
+							let obj={status:"success",order:JSON.parse(e.order_data)};
 							sendResponse(res, 200,JSON.stringify(obj));
 						}
 					}
