@@ -600,7 +600,7 @@ async function main()
 			else if (req.url=="/GetTokenOrderDetails")
 			{
 				logger.info("Getting token order details with order id ->" + post.order_id);
-				let sql="SELECT * FROM nft.token_orders WHERE token_id='"+post.order_id+"' AND is_valid=1 AND network_id="+network_id+" LIMIT 1;";
+				let sql="SELECT * FROM nft.token_orders WHERE md5(order_id)='"+post.order_id+"' AND is_valid=1 AND network_id="+network_id+" LIMIT 1;";
 				logger.info(sql);
 				con.query(sql, function (err, result, fields)
 				{
