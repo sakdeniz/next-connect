@@ -597,6 +597,29 @@ async function main()
 					logger.info(e);
 				});
 			}
+			else if (req.url=="/GetTokenOrderDetails")
+			{
+				logger.info("Getting token order details with order id ->" + post.order_id);
+				let sql="SELECT * FROM nft.token_orders WHERE token_id='"+post.order_id+"' AND is_valid=1 AND network_id="+network_id+" LIMIT 1;";
+				logger.info(sql);
+				con.query(sql, function (err, result, fields)
+				{
+					if (err) logger.error(err);
+					if (result.length==1)
+					{
+						for (let e of result)
+						{
+							let obj={status:"success",order:e.order_data};
+							sendResponse(res, 200,JSON.stringify(obj));
+						}
+					}
+					else
+					{
+						let obj={status:"false",order_id:post.order_id};
+						sendResponse(res, 200,JSON.stringify(obj));
+					}
+				});
+			}
 			else if (req.url=="/CheckQR")
 			{
 				logger.info("Checking QR code -> " + post.code);
