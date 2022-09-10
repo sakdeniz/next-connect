@@ -600,7 +600,7 @@ async function main()
 			else if (req.url=="/GetTokenOrderDetails")
 			{
 				logger.info("Getting token order details with order id ->" + post.order_id);
-				let sql="SELECT token_orders.order_data,t1.token_symbol AS token_pay_symbol,t2.token_symbol AS token_receive_symbol FROM nft.token_orders LEFT JOIN tokens AS t1 ON JSON_UNQUOTE(JSON_EXTRACT(order_data, '$.pay[0].tokenId'))=t1.token_public_id LEFT JOIN tokens AS t2 ON JSON_UNQUOTE(JSON_EXTRACT(order_data, '$.pay[0].tokenId'))=t2.token_public_id WHERE md5(order_id)='"+post.order_id+"' AND is_valid=1 AND network_id="+network_id+" LIMIT 1;";
+				let sql="SELECT token_orders.order_data,t1.token_symbol AS token_pay_symbol,t2.token_symbol AS token_receive_symbol FROM nft.token_orders LEFT JOIN nft.tokens AS t1 ON JSON_UNQUOTE(JSON_EXTRACT(order_data, '$.pay[0].tokenId'))=t1.token_public_id LEFT JOIN nft.tokens AS t2 ON JSON_UNQUOTE(JSON_EXTRACT(order_data, '$.pay[0].tokenId'))=t2.token_public_id WHERE md5(order_id)='"+post.order_id+"' AND is_valid=1 AND network_id="+network_id+" LIMIT 1;";
 				logger.info(sql);
 				con.query(sql, function (err, result, fields)
 				{
