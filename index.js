@@ -4,7 +4,8 @@ var http=require('http');
 var server;
 var argv=require('minimist')(process.argv.slice(2));
 const config={headers: {'Content-Type': 'application/x-www-form-urlencoded'},responseType: 'text'};
-const ElectrumClient = require('@aguycalled/electrum-client-js')
+const ElectrumClient = require('@aguycalled/electrum-client-js');
+const bitcore = require('@aguycalled/bitcore-lib');
 const fs = require('fs');
 const setGlobalVars = require("indexeddbshim");
 const njs = require("navcoin-js");
