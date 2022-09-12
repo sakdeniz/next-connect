@@ -451,7 +451,7 @@ async function main()
 			{
 				let hash=undefined;
 				let nout=undefined;
-				for (let input of Bitcore.Transaction(post.order.tx).inputs)
+				for (let input of bitcore.Transaction(post.order.tx).inputs)
 				{
 					hash=buffer.Buffer.from(input.prevTxId).toString("hex");
 					nout=input.outputIndex;
