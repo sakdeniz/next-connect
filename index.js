@@ -180,7 +180,7 @@ async function main()
 	
 	function invalidateProof(s)
 	{
-		logger.info("NFT Moved");
+		logger.info("NFT or Token Moved");
 		logger.info("Old hash -> " + s[0][0]);
 		logger.info("New hash -> " + s[1].spender_txhash);
 		let sql="SELECT id FROM nft.proofs WHERE hash='"+s[0][0]+"' AND is_valid=1 AND network_id="+network_id+" LIMIT 1;";
@@ -235,6 +235,33 @@ async function main()
 			else
 			{
 				logger.info("NFT ownership (order) already invalidated.");
+			}
+		});
+		sql="SELECT order_id FROM nft.token_orders WHERE hash='"+s[0][0]+"' AND is_valid=1 AND network_id="+network_id+" LIMIT 1;";
+		logger.info(sql);
+		con.query(sql, function (err, result, fields)
+		{
+			if (err) logger.error(err);
+			if (result.length==1)
+			{
+				let sql = "UPDATE nft.token_orders SET `invalidated_date`=NOW(),`new_hash`='"+s[1].spender_txhash+"',`is_valid` = '0' WHERE token_orders.hash='"+s[0][0]+"' AND network_id="+network_id+";";
+				logger.info(sql);
+				con.query(sql, function (err, result)
+				{
+					if (err)
+					{
+						logger.error(err);
+						logger.info("Token order cannot invalidated -> " + err);
+					}
+					else
+					{
+						logger.info("Token order successfully invalidated.");
+					}
+				});
+			}
+			else
+			{
+				logger.info("Token order already invalidated.");
 			}
 		});
 	}
@@ -422,6 +449,13 @@ async function main()
 			}
 			else if (req.url=="/CreateTokenOrder")
 			{
+				let hash=undefined;
+				let nout=undefined;
+				for (let input of Bitcore.Transaction(post.order.tx).inputs)
+				{
+					hash=buffer.Buffer.from(input.prevTxId).toString("hex");
+					nout=input.outputIndex;
+				}
 				logger.info("Creating token order...");
 				logger.info(post.order);
 				logger.info("Address -> " + post.address);
@@ -453,6 +487,8 @@ async function main()
 									    order_pair_id,
 									    order_type,
 									    order_data,
+									    hash,
+									    nout,
 									    private_address,
 									    price,
 									    amount,
@@ -465,6 +501,8 @@ async function main()
 									    `+o.pair_id+`,
 									    `+(post.orderType=="buy"?2:1)+`,
 									    ?,
+									    '`+hash+`',
+									    `+nout+`,
 									    '`+post.address+`',
 									    0,
 									    0,
@@ -485,9 +523,9 @@ async function main()
 										else
 										{
 											logger.info("Token order record added to database.");
-											/*logger.info("Subscribing token order -> " + retval.txid + "->" + retval.nout);
-											let currentStatus = await client.blockchain_outpoint_subscribe(retval.txid,retval.nout);
-											verifyStatus([[retval.txid, retval.nout], currentStatus]);*/
+											logger.info("Subscribing token order -> " + hash + "->" + nout);
+											let currentStatus = await client.blockchain_outpoint_subscribe(hash,nout);
+											verifyStatus([[hash, nout], currentStatus]);
 											let obj={status:"order_created",message:"Token order ("+o.token_1_name+"/"+o.token_2_name+") successfully created."};
 											sendResponse(res, 200,JSON.stringify(obj));
 										}
@@ -764,6 +802,17 @@ async function main()
 			for (let e of result)
 			{
 				logger.info("Subscribing nft sell order -> " + e.hash + "->" + e.nout);
+				let currentStatus = await client.blockchain_outpoint_subscribe(e.hash,parseInt(e.nout));
+				verifyStatus([[e.hash, parseInt(e.nout)], currentStatus]);
+			}
+		});
+		logger.info("Subscribing for token orders...");
+		con.query("SELECT hash,nout FROM nft.token_orders WHERE is_valid=1 AND network_id="+network_id, async function (err, result, fields)
+		{
+			if (err) logger.error(err);
+			for (let e of result)
+			{
+				logger.info("Subscribing token order -> " + e.hash + "->" + e.nout);
 				let currentStatus = await client.blockchain_outpoint_subscribe(e.hash,parseInt(e.nout));
 				verifyStatus([[e.hash, parseInt(e.nout)], currentStatus]);
 			}
