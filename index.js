@@ -209,7 +209,7 @@ async function main()
 			}
 			else
 			{
-				logger.info("NFT ownership (proof) already invalidated.");
+				logger.info("NFT ownership (proof) not found or already invalidated.");
 			}
 		});
 		sql="SELECT id FROM nft.orders WHERE hash='"+s[0][0]+"' AND is_valid=1 AND network_id="+network_id+" LIMIT 1;";
@@ -236,7 +236,7 @@ async function main()
 			}
 			else
 			{
-				logger.info("NFT ownership (order) already invalidated.");
+				logger.info("NFT ownership (order) not found or already invalidated.");
 			}
 		});
 		sql="SELECT order_id FROM nft.token_orders WHERE hash='"+s[0][0]+"' AND is_valid=1 AND network_id="+network_id+" LIMIT 1;";
@@ -263,7 +263,7 @@ async function main()
 			}
 			else
 			{
-				logger.info("Token order already invalidated.");
+				logger.info("Token order not found or already invalidated.");
 			}
 		});
 	}
