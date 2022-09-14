@@ -487,7 +487,7 @@ async function main()
 							}
 						});
 
-						let sql="SELECT * FROM `nft`.`tokens` WHERE token_public_id='"+message.token_2_id+"' LIMIT 1";
+						sql="SELECT * FROM `nft`.`tokens` WHERE token_public_id='"+message.token_2_id+"' LIMIT 1";
 						logger.info(sql);
 						con.query(sql, async function (err, result, fields)
 						{
@@ -505,7 +505,7 @@ async function main()
 							}
 						});
 
-						let sql="SELECT pairs.pair_id,t1.token_id AS token_1_id,t1.token_name AS token_1_name,t2.token_id AS token_2_id,t2.token_name AS token_2_name FROM nft.pairs INNER JOIN nft.tokens AS t1 on pairs.token_1_id=t1.token_id INNER JOIN nft.tokens AS t2 ON pairs.token_2_id=t2.token_id WHERE t1.token_public_id='"+message.token_1_id+"' AND t2.token_public_id='"+message.token_2_id+"' LIMIT 1";
+						sql="SELECT pairs.pair_id,t1.token_id AS token_1_id,t1.token_name AS token_1_name,t2.token_id AS token_2_id,t2.token_name AS token_2_name FROM nft.pairs INNER JOIN nft.tokens AS t1 on pairs.token_1_id=t1.token_id INNER JOIN nft.tokens AS t2 ON pairs.token_2_id=t2.token_id WHERE t1.token_public_id='"+message.token_1_id+"' AND t2.token_public_id='"+message.token_2_id+"' LIMIT 1";
 						logger.info(sql);
 						con.query(sql, async function (err, result, fields)
 						{
