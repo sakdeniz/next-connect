@@ -520,61 +520,62 @@ async function main()
 										});
 								});
 							}
-						});
-						sql="SELECT * FROM `nft`.`tokens` WHERE token_public_id='"+message.token_2_id+"' LIMIT 1";
-						logger.info(sql);
-						con.query(sql, async function (err, result, fields)
-						{
-							if (result.length>0)
+							sql="SELECT * FROM `nft`.`tokens` WHERE token_public_id='"+message.token_2_id+"' LIMIT 1";
+							logger.info(sql);
+							con.query(sql, async function (err, result, fields)
 							{
-								for (let o of result)
+								if (result.length>0)
 								{
-									token_2_id=o.token_id;
+									for (let o of result)
+									{
+										token_2_id=o.token_id;
+									}
+									console.log("Token 2 found -> " + token_2_id);
+									create_token_pair(message.token_1_id,token_1_id,message.token_2_id,token_2_id);
 								}
-								console.log("Token 2 found -> " + token_2_id);
-							}
-							else
-							{
-								console.log("Token 2 not found, getting token details...");
-								wallet.GetTokenInfo(message.token_2_id).then((token_info) =>
+								else
 								{
-									logger.info(token_info);
-									sql = `INSERT INTO nft.tokens(
-										    token_id,
-										    token_public_id,
-										    token_name,
-										    token_symbol,
-										    token_info,
-										    token_image,
-										    token_active,
-										    token_created_at
-										)
-										VALUES(
-										    NULL,
-										    '`+message.token_2_id+`',
-										    '`+token_info.name+`',
-										    '`+token_info.code+`',
-										    NULL,
-										    NULL,
-										    1,
-										    NOW()
-										);`;
-										logger.info(sql);
-										con.query(sql, async function (err, result)
-										{
-											if (err)
+									console.log("Token 2 not found, getting token details...");
+									wallet.GetTokenInfo(message.token_2_id).then((token_info) =>
+									{
+										logger.info(token_info);
+										sql = `INSERT INTO nft.tokens(
+											    token_id,
+											    token_public_id,
+											    token_name,
+											    token_symbol,
+											    token_info,
+											    token_image,
+											    token_active,
+											    token_created_at
+											)
+											VALUES(
+											    NULL,
+											    '`+message.token_2_id+`',
+											    '`+token_info.name+`',
+											    '`+token_info.code+`',
+											    NULL,
+											    NULL,
+											    1,
+											    NOW()
+											);`;
+											logger.info(sql);
+											con.query(sql, async function (err, result)
 											{
-												logger.error(err);
-												logger.info("Token 2 record not added -> " + err);
-											}
-											else
-											{
-												logger.info("Token 2 record added to database. Insert ID -> " + result.insertId);
-											}
-										});
-										create_token_pair(message.token_1_id,token_1_id,message.token_2_id,token_2_id);
-								});
-							}
+												if (err)
+												{
+													logger.error(err);
+													logger.info("Token 2 record not added -> " + err);
+												}
+												else
+												{
+													logger.info("Token 2 record added to database. Insert ID -> " + result.insertId);
+													create_token_pair(message.token_1_id,token_1_id,message.token_2_id,token_2_id);
+												}
+											});
+									});
+								}
+							});
 						});
 					}
 					else
