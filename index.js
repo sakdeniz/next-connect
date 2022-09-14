@@ -898,8 +898,8 @@ async function main()
 				)
 				VALUES(
 				    NULL,
-				    `+token_1_id+`,
 				    `+token_2_id+`,
+				    `+token_1_id+`,
 				    NOW(),
 				    1
 				);`;
