@@ -459,13 +459,14 @@ async function main()
 				.then(function(result)
 				{
 					console.log("AugmentedVerify Result -> " + result);
+					let obj=undefined;
 					if (result)
 					{
-						let obj={status:"token_pair_created",message:"Token pair successfully created."};
+						obj={status:"token_pair_created",message:"Token pair successfully created."};
 					}
 					else
 					{
-						let obj={status:"token_pair_failed",message:"Token pair cannot created."};
+						obj={status:"token_pair_failed",message:"Token pair cannot created."};
 					}
 					sendResponse(res, 200,JSON.stringify(obj));
 
