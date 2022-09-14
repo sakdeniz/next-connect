@@ -868,7 +868,7 @@ async function main()
 
 	function create_token_pair(token_1_public_id,token_1_id,token_2_public_id,token_2_id,res)
 	{
-		sql="SELECT pairs.pair_id,t1.token_id AS token_1_id,t1.token_name AS token_1_name,t2.token_id AS token_2_id,t2.token_name AS token_2_name FROM nft.pairs INNER JOIN nft.tokens AS t1 on pairs.token_1_id=t1.token_id INNER JOIN nft.tokens AS t2 ON pairs.token_2_id=t2.token_id WHERE (t1.token_public_id='"+token_1_public_id+"' AND t2.token_public_id='"+token_2_public_id+"') OR (t1.token_public_id='"+token_2_public_id+"' AND t2.token_public_id='"+token_1_public_id+"') LIMIT 1";
+		sql="SELECT pairs.pair_id,t1.token_id AS token_1_id,t1.token_name AS token_1_name,t2.token_id AS token_2_id,t2.token_name AS token_2_name FROM nft.pairs INNER JOIN nft.tokens AS t1 on pairs.token_1_id=t1.token_id INNER JOIN nft.tokens AS t2 ON pairs.token_2_id=t2.token_id WHERE ("+ (token_1_public_id?"t1.token_public_id='"+token_1_public_id+"'":"t1.token_public_id IS NULL")+" AND "+(token_2_public_id?"t2.token_public_id='"+token_2_public_id+"'":"t2.token_public_id IS NULL")+") OR ("+(t1.token_public_id?"t1.token_public_id='"+token_2_public_id+"'":"t1.token_public_id IS NULL")+" AND "+ (t2.token_public_id?"t2.token_public_id='"+token_1_public_id+"'":"t2.token_public_id IS NULL")+") LIMIT 1";
 		logger.info(sql);
 		con.query(sql, async function (err, result, fields)
 		{
