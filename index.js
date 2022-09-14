@@ -516,6 +516,7 @@ async function main()
 											else
 											{
 												logger.info("Token 1 record added to database. Insert ID -> " + result.insertId);
+												token_1_id=result.insertId;
 											}
 										});
 								});
@@ -570,7 +571,7 @@ async function main()
 												else
 												{
 													logger.info("Token 2 record added to database. Insert ID -> " + result.insertId);
-													create_token_pair(message.token_1_id,token_1_id,message.token_2_id,token_2_id);
+													create_token_pair(message.token_1_id,token_1_id,message.token_2_id,result.insertId);
 												}
 											});
 									});
