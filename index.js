@@ -532,7 +532,7 @@ async function main()
 										token_2_id=o.token_id;
 									}
 									console.log("Token 2 found -> " + token_2_id);
-									create_token_pair(message.token_1_id,token_1_id,message.token_2_id,token_2_id);
+									create_token_pair(message.token_1_id,token_1_id,message.token_2_id,token_2_id,res);
 								}
 								else
 								{
@@ -571,7 +571,7 @@ async function main()
 												else
 												{
 													logger.info("Token 2 record added to database. Insert ID -> " + result.insertId);
-													create_token_pair(message.token_1_id,token_1_id,message.token_2_id,result.insertId);
+													create_token_pair(message.token_1_id,token_1_id,message.token_2_id,result.insertId,res);
 												}
 											});
 									});
@@ -866,7 +866,7 @@ async function main()
 	}
 	client.subscribe.on("blockchain.outpoint.subscribe", verifyStatus);
 
-	function create_token_pair(token_1_public_id,token_1_id,token_2_public_id,token_2_id)
+	function create_token_pair(token_1_public_id,token_1_id,token_2_public_id,token_2_id,res)
 	{
 		sql="SELECT pairs.pair_id,t1.token_id AS token_1_id,t1.token_name AS token_1_name,t2.token_id AS token_2_id,t2.token_name AS token_2_name FROM nft.pairs INNER JOIN nft.tokens AS t1 on pairs.token_1_id=t1.token_id INNER JOIN nft.tokens AS t2 ON pairs.token_2_id=t2.token_id WHERE (t1.token_public_id='"+token_1_public_id+"' AND t2.token_public_id='"+token_2_public_id+"') OR (t1.token_public_id='"+token_2_public_id+"' AND t2.token_public_id='"+token_1_public_id+"') LIMIT 1";
 		logger.info(sql);
