@@ -449,6 +449,13 @@ async function main()
 					}
 				});
 			}
+			else if (req.url=="/CreateTokenPair")
+			{
+				logger.info("Creating token pair...");
+				console.log(post);
+				let obj={status:"token_pair_created",message:"Token pair successfully created."};
+				sendResponse(res, 200,JSON.stringify(obj));
+			}
 			else if (req.url=="/CreateTokenOrder")
 			{
 				let hash=undefined;
