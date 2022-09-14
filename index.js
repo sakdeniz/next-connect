@@ -572,53 +572,7 @@ async function main()
 												logger.info("Token 2 record added to database. Insert ID -> " + result.insertId);
 											}
 										});
-								});
-							}
-						});
-
-						sql="SELECT pairs.pair_id,t1.token_id AS token_1_id,t1.token_name AS token_1_name,t2.token_id AS token_2_id,t2.token_name AS token_2_name FROM nft.pairs INNER JOIN nft.tokens AS t1 on pairs.token_1_id=t1.token_id INNER JOIN nft.tokens AS t2 ON pairs.token_2_id=t2.token_id WHERE (t1.token_public_id='"+message.token_1_id+"' AND t2.token_public_id='"+message.token_2_id+"') OR (t1.token_public_id='"+message.token_2_id+"' AND t2.token_public_id='"+message.token_1_id+"') LIMIT 1";
-						logger.info(sql);
-						con.query(sql, async function (err, result, fields)
-						{
-							if (err) logger.error(err);
-							logger.info("Result length-> " + result.length);
-							if (result.length>0)
-							{
-								obj={status:"token_pair_exist",message:"Token pair already exist."};
-								sendResponse(res, 200,JSON.stringify(obj));
-							}
-							else
-							{
-								let sql = `INSERT INTO nft.pairs(
-								    pair_id,
-								    token_1_id,
-								    token_2_id,
-								    created_at,
-								    is_active
-								)
-								VALUES(
-								    NULL,
-								    `+token_1_id+`,
-								    `+token_2_id+`,
-								    NOW(),
-								    1
-								);`;
-								logger.info(sql);
-								con.query(sql,[JSON.stringify(post.order)], async function (err, result)
-								{
-									if (err)
-									{
-										logger.error(err);
-										let obj={status:"failed",message:"Database error."};
-										logger.info(obj);
-										logger.info("Token pair record not added -> " + err);
-									}
-									else
-									{
-										logger.info("Token pair record added to database.");
-										obj={status:"token_pair_created",message:"Token pair successfully created."};
-									}
-									sendResponse(res, 200,JSON.stringify(obj));
+										create_token_pair(message.token_1_id,token_1_id,message.token_2_id,token_2_id);
 								});
 							}
 						});
@@ -909,6 +863,56 @@ async function main()
 		}
 	}
 	client.subscribe.on("blockchain.outpoint.subscribe", verifyStatus);
+
+	function create_token_pair(token_1_public_id,token_1_id,token_2_public_id,token_2_id)
+	{
+		sql="SELECT pairs.pair_id,t1.token_id AS token_1_id,t1.token_name AS token_1_name,t2.token_id AS token_2_id,t2.token_name AS token_2_name FROM nft.pairs INNER JOIN nft.tokens AS t1 on pairs.token_1_id=t1.token_id INNER JOIN nft.tokens AS t2 ON pairs.token_2_id=t2.token_id WHERE (t1.token_public_id='"+token_1_public_id+"' AND t2.token_public_id='"+token_2_public_id+"') OR (t1.token_public_id='"+token_2_public_id+"' AND t2.token_public_id='"+token_1_public_id+"') LIMIT 1";
+		logger.info(sql);
+		con.query(sql, async function (err, result, fields)
+		{
+			if (err) logger.error(err);
+			logger.info("Result length-> " + result.length);
+			if (result.length>0)
+			{
+				obj={status:"token_pair_exist",message:"Token pair already exist."};
+				sendResponse(res, 200,JSON.stringify(obj));
+			}
+			else
+			{
+				let sql = `INSERT INTO nft.pairs(
+				    pair_id,
+				    token_1_id,
+				    token_2_id,
+				    created_at,
+				    is_active
+				)
+				VALUES(
+				    NULL,
+				    `+token_1_id+`,
+				    `+token_2_id+`,
+				    NOW(),
+				    1
+				);`;
+				logger.info(sql);
+				con.query(sql, async function (err, result)
+				{
+					if (err)
+					{
+						logger.error(err);
+						let obj={status:"failed",message:"Database error."};
+						logger.info(obj);
+						logger.info("Token pair record not added -> " + err);
+					}
+					else
+					{
+						logger.info("Token pair record added to database.");
+						obj={status:"token_pair_created",message:"Token pair successfully created."};
+					}
+					sendResponse(res, 200,JSON.stringify(obj));
+				});
+			}
+		});
+	}
 
 	function create_nft_collection(token_id)
 	{
