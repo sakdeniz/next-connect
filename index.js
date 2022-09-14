@@ -499,7 +499,7 @@ async function main()
 										)
 										VALUES(
 										    NULL,
-										    `+message.token_1_id+`,
+										    '`+message.token_1_id+`',
 										    '`+token_info.name+`',
 										    '`+token_info.symbol+`',
 										    NULL,
