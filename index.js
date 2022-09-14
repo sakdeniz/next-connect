@@ -501,7 +501,7 @@ async function main()
 										    NULL,
 										    '`+message.token_1_id+`',
 										    '`+token_info.name+`',
-										    '`+token_info.symbol+`',
+										    '`+token_info.code+`',
 										    NULL,
 										    NULL,
 										    1,
