@@ -479,7 +479,7 @@ async function main()
 							{
 								obj={status:"token_pair_exist",message:"Token pair already exist."};
 							}
-						}
+						});
 					}
 					else
 					{
