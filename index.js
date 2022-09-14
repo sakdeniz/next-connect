@@ -455,7 +455,7 @@ async function main()
 				console.log(post.signature);
 				console.log(post.message);
 				console.log(post.TokenKey);
-				bitcore.Transaction.Blsct.AugmentedVerify(post.TokenKey,post.message,Uint8Array.from(Buffer.from(post.signature, 'hex')));
+				bitcore.Transaction.Blsct.AugmentedVerify(post.TokenKey,post.message,Uint8Array.from(Buffer.from(post.signature, 'hex')))
 				.then(function(result)
 				{
 					console.log("AugmentedVerify Result -> " + result);
