@@ -479,14 +479,14 @@ async function main()
 							{
 								obj={status:"token_pair_exist",message:"Token pair already exist."};
 							}
+							sendResponse(res, 200,JSON.stringify(obj));
 						});
 					}
 					else
 					{
 						obj={status:"token_pair_failed",message:"Token pair cannot created."};
+						sendResponse(res, 200,JSON.stringify(obj));
 					}
-					sendResponse(res, 200,JSON.stringify(obj));
-
 				});
 			}
 			else if (req.url=="/CreateTokenOrder")
