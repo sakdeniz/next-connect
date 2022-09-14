@@ -467,7 +467,7 @@ async function main()
 					let obj=undefined;
 					if (result)
 					{
-						let sql="SELECT * FROM `nft`.`tokens` WHERE token_public_id='"+message.token_1_id+"' LIMIT 1";
+						let sql="SELECT * FROM `nft`.`tokens` WHERE "+(message.token_1_id?"token_public_id='"+message.token_1_id+"'":" token_public_id IS NULL")+" LIMIT 1";
 						logger.info(sql);
 						con.query(sql, async function (err, result, fields)
 						{
@@ -521,7 +521,7 @@ async function main()
 										});
 								});
 							}
-							sql="SELECT * FROM `nft`.`tokens` WHERE token_public_id='"+message.token_2_id+"' LIMIT 1";
+							sql="SELECT * FROM `nft`.`tokens` WHERE "+(message.token_2_id?"token_public_id='"+message.token_2_id+"'":"token_public_id IS NULL")+" LIMIT 1";
 							logger.info(sql);
 							con.query(sql, async function (err, result, fields)
 							{
