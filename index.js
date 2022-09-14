@@ -532,7 +532,10 @@ async function main()
 										token_2_id=o.token_id;
 									}
 									console.log("Token 2 found -> " + token_2_id);
-									create_token_pair(message.token_1_id,token_1_id,message.token_2_id,token_2_id,res);
+									setTimeout(function()
+									{
+										create_token_pair(message.token_1_id,token_1_id,message.token_2_id,token_2_id,res);
+									}, 1000);
 								}
 								else
 								{
@@ -868,6 +871,11 @@ async function main()
 
 	function create_token_pair(token_1_public_id,token_1_id,token_2_public_id,token_2_id,res)
 	{
+		logger.info("Creating Token Pair");
+		logger.info("token_1_public_id -> "+token_1_public_id);
+		logger.info("token_1_id -> "+token_1_id);
+		logger.info("token_2_public_id -> "+token_2_public_id);
+		logger.info("token_2_id -> "+token_2_id);
 		sql="SELECT pairs.pair_id,t1.token_id AS token_1_id,t1.token_name AS token_1_name,t2.token_id AS token_2_id,t2.token_name AS token_2_name FROM nft.pairs INNER JOIN nft.tokens AS t1 on pairs.token_1_id=t1.token_id INNER JOIN nft.tokens AS t2 ON pairs.token_2_id=t2.token_id WHERE ("+ (token_1_public_id?"t1.token_public_id='"+token_1_public_id+"'":"t1.token_public_id IS NULL")+" AND "+(token_2_public_id?"t2.token_public_id='"+token_2_public_id+"'":"t2.token_public_id IS NULL")+") OR ("+(token_2_public_id?"t1.token_public_id='"+token_2_public_id+"'":"t1.token_public_id IS NULL")+" AND "+ (token_1_public_id?"t2.token_public_id='"+token_1_public_id+"'":"t2.token_public_id IS NULL")+") LIMIT 1";
 		logger.info(sql);
 		con.query(sql, async function (err, result, fields)
