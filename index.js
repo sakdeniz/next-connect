@@ -458,7 +458,7 @@ async function main()
 				let message=JSON.parse(post.message);
 				console.log("Token 1 ID : " + message.token_1_id);
 				console.log("Token 2 ID : " + message.token_2_id);
-				let token_1_id=5;
+				let token_1_id=undefined;
 				let token_2_id=10;
 				bitcore.Transaction.Blsct.AugmentedVerify(post.TokenKey,post.message,Uint8Array.from(Buffer.from(post.signature, 'hex')))
 				.then(function(result)
@@ -467,7 +467,45 @@ async function main()
 					let obj=undefined;
 					if (result)
 					{
-						let sql="SELECT pairs.pair_id,t1.token_id AS token_1_id,t1.token_name AS token_1_name,t2.token_id AS token_2_id,t2.token_name AS token_2_name FROM nft.pairs INNER JOIN nft.tokens AS t1 on pairs.token_1_id=t1.token_id INNER JOIN nft.tokens AS t2 ON pairs.token_2_id=t2.token_id WHERE t2.token_public_id='"+message.token_1_id+"' AND t1.token_public_id='"+message.token_2_id+"' LIMIT 1";
+
+
+						let sql="SELECT * FROM `nft`.`tokens` WHERE token_public_id='"+message.token_1_id+"' LIMIT 1";
+						logger.info(sql);
+						con.query(sql, async function (err, result, fields)
+						{
+							if (result.length>0)
+							{
+								for (let o of result)
+								{
+									token_1_id=o.token_id;
+								}
+								console.log("Token 1 found -> " + token_1_id);
+							}
+							else
+							{
+								console.log("Token 1 not found");
+							}
+						};
+
+						let sql="SELECT * FROM `nft`.`tokens` WHERE token_public_id='"+message.token_2_id+"' LIMIT 1";
+						logger.info(sql);
+						con.query(sql, async function (err, result, fields)
+						{
+							if (result.length>0)
+							{
+								for (let o of result)
+								{
+									token_2_id=o.token_id;
+								}
+								console.log("Token 2 found -> " + token_1_id);
+							}
+							else
+							{
+								console.log("Token 2 not found");
+							}
+						};
+
+						let sql="SELECT pairs.pair_id,t1.token_id AS token_1_id,t1.token_name AS token_1_name,t2.token_id AS token_2_id,t2.token_name AS token_2_name FROM nft.pairs INNER JOIN nft.tokens AS t1 on pairs.token_1_id=t1.token_id INNER JOIN nft.tokens AS t2 ON pairs.token_2_id=t2.token_id WHERE t1.token_public_id='"+message.token_1_id+"' AND t2.token_public_id='"+message.token_2_id+"' LIMIT 1";
 						logger.info(sql);
 						con.query(sql, async function (err, result, fields)
 						{
