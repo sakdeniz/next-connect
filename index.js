@@ -459,7 +459,7 @@ async function main()
 				console.log("Token 1 ID : " + message.token_1_id);
 				console.log("Token 2 ID : " + message.token_2_id);
 				let token_1_id=undefined;
-				let token_2_id=10;
+				let token_2_id=undefined;
 				bitcore.Transaction.Blsct.AugmentedVerify(post.TokenKey,post.message,Uint8Array.from(Buffer.from(post.signature, 'hex')))
 				.then(function(result)
 				{
@@ -515,7 +515,7 @@ async function main()
 											}
 											else
 											{
-												logger.info("Token 1 record added to database.");
+												logger.info("Token 1 record added to database. Insert ID -> " + result.insertId);
 											}
 										});
 								});
@@ -569,7 +569,7 @@ async function main()
 											}
 											else
 											{
-												logger.info("Token 2 record added to database.");
+												logger.info("Token 2 record added to database. Insert ID -> " + result.insertId);
 											}
 										});
 								});
