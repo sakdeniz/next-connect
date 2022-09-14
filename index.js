@@ -458,6 +458,8 @@ async function main()
 				let message=JSON.parse(post.message);
 				console.log("Token 1 ID : " + message.token_1_id);
 				console.log("Token 2 ID : " + message.token_2_id);
+				let token_1_id=5;
+				let token_2_id=10;
 				bitcore.Transaction.Blsct.AugmentedVerify(post.TokenKey,post.message,Uint8Array.from(Buffer.from(post.signature, 'hex')))
 				.then(function(result)
 				{
@@ -473,13 +475,43 @@ async function main()
 							logger.info("Result length-> " + result.length);
 							if (result.length>0)
 							{
-								obj={status:"token_pair_created",message:"Token pair successfully created."};
+								obj={status:"token_pair_exist",message:"Token pair already exist."};
+								sendResponse(res, 200,JSON.stringify(obj));
 							}
 							else
 							{
-								obj={status:"token_pair_exist",message:"Token pair already exist."};
+								let sql = `INSERT INTO nft.pairs(
+								    pair_id,
+								    token_1_id,
+								    token_2_id,
+								    created_at,
+								    is_active
+								)
+								VALUES(
+								    NULL,
+								    `+token_1_id+`,
+								    `+token_2_id+`,
+								    NOW(),
+								    1
+								);`;
+								logger.info(sql);
+								con.query(sql,[JSON.stringify(post.order)], async function (err, result)
+								{
+									if (err)
+									{
+										logger.error(err);
+										let obj={status:"failed",message:"Database error."};
+										logger.info(obj);
+										logger.info("Token pair record not added -> " + err);
+									}
+									else
+									{
+										logger.info("Token pair record added to database.");
+										obj={status:"token_pair_created",message:"Token pair successfully created."};
+									}
+									sendResponse(res, 200,JSON.stringify(obj));
+								});
 							}
-							sendResponse(res, 200,JSON.stringify(obj));
 						});
 					}
 					else
