@@ -453,8 +453,21 @@ async function main()
 			{
 				logger.info("Creating token pair...");
 				console.log(post);
-				let obj={status:"token_pair_created",message:"Token pair successfully created."};
-				sendResponse(res, 200,JSON.stringify(obj));
+				bitcore.Transaction.Blsct.AugmentedVerify(post.TokenKey,post.message,post.signature)
+				.then(function(result)
+				{
+					console.log("AugmentedVerify Result -> " + result);
+					if (result)
+					{
+						let obj={status:"token_pair_created",message:"Token pair successfully created."};
+					}
+					else
+					{
+						let obj={status:"token_pair_failed",message:"Token pair cannot created."};
+					}
+					sendResponse(res, 200,JSON.stringify(obj));
+
+				});
 			}
 			else if (req.url=="/CreateTokenOrder")
 			{
