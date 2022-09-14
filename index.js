@@ -467,8 +467,6 @@ async function main()
 					let obj=undefined;
 					if (result)
 					{
-
-
 						let sql="SELECT * FROM `nft`.`tokens` WHERE token_public_id='"+message.token_1_id+"' LIMIT 1";
 						logger.info(sql);
 						con.query(sql, async function (err, result, fields)
@@ -483,7 +481,7 @@ async function main()
 							}
 							else
 							{
-								console.log("Token 1 not found");
+								console.log("Token 1 not found, getting token details...");
 								wallet.GetTokenInfo(message.token_1_id).then((token_info) =>
 								{
 									logger.info(token_info);
@@ -523,7 +521,6 @@ async function main()
 								});
 							}
 						});
-
 						sql="SELECT * FROM `nft`.`tokens` WHERE token_public_id='"+message.token_2_id+"' LIMIT 1";
 						logger.info(sql);
 						con.query(sql, async function (err, result, fields)
@@ -538,7 +535,44 @@ async function main()
 							}
 							else
 							{
-								console.log("Token 2 not found");
+								console.log("Token 2 not found, getting token details...");
+								wallet.GetTokenInfo(message.token_2_id).then((token_info) =>
+								{
+									logger.info(token_info);
+									sql = `INSERT INTO nft.tokens(
+										    token_id,
+										    token_public_id,
+										    token_name,
+										    token_symbol,
+										    token_info,
+										    token_image,
+										    token_active,
+										    token_created_at
+										)
+										VALUES(
+										    NULL,
+										    '`+message.token_2_id+`',
+										    '`+token_info.name+`',
+										    '`+token_info.code+`',
+										    NULL,
+										    NULL,
+										    1,
+										    NOW()
+										);`;
+										logger.info(sql);
+										con.query(sql, async function (err, result)
+										{
+											if (err)
+											{
+												logger.error(err);
+												logger.info("Token 2 record not added -> " + err);
+											}
+											else
+											{
+												logger.info("Token 2 record added to database.");
+											}
+										});
+								});
 							}
 						});
 
