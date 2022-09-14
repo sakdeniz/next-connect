@@ -452,7 +452,9 @@ async function main()
 			else if (req.url=="/CreateTokenPair")
 			{
 				logger.info("Creating token pair...");
-				console.log(post);
+				console.log(post.signature);
+				console.log(post.message);
+				console.log(post.TokenKey);
 				bitcore.Transaction.Blsct.AugmentedVerify(post.TokenKey,post.message,post.signature)
 				.then(function(result)
 				{
