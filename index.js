@@ -484,6 +484,43 @@ async function main()
 							else
 							{
 								console.log("Token 1 not found");
+								wallet.GetTokenInfo(message.token_1_id).then((token_info) =>
+								{
+									logger.info(token_info);
+									sql = `INSERT INTO nft.tokens(
+										    token_id,
+										    token_public_id,
+										    token_name,
+										    token_symbol,
+										    token_info,
+										    token_image,
+										    token_active,
+										    token_created_at
+										)
+										VALUES(
+										    NULL,
+										    `+message.token_1_id+`,
+										    '`+token_info.name+`',
+										    '`+token_info.symbol+`',
+										    NULL,
+										    NULL,
+										    1,
+										    NOW()
+										);`;
+										logger.info(sql);
+										con.query(sql, async function (err, result)
+										{
+											if (err)
+											{
+												logger.error(err);
+												logger.info("Token 1 record not added -> " + err);
+											}
+											else
+											{
+												logger.info("Token 1 record added to database.");
+											}
+										});
+								});
 							}
 						});
 
