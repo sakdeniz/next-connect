@@ -469,9 +469,9 @@ async function main()
 					{
 
 
-						let sql="SELECT * FROM `nft`.`tokens` WHERE token_public_id='"+message.token_1_id+"' LIMIT 1";
-						logger.info(sql);
-						con.query(sql, async function (err, result, fields)
+						let sql1="SELECT * FROM `nft`.`tokens` WHERE token_public_id='"+message.token_1_id+"' LIMIT 1";
+						logger.info(sql1);
+						con.query(sql1, async function (err, result, fields)
 						{
 							if (result.length>0)
 							{
@@ -487,9 +487,9 @@ async function main()
 							}
 						});
 
-						sql="SELECT * FROM `nft`.`tokens` WHERE token_public_id='"+message.token_2_id+"' LIMIT 1";
-						logger.info(sql);
-						con.query(sql, async function (err, result, fields)
+						let sql2="SELECT * FROM `nft`.`tokens` WHERE token_public_id='"+message.token_2_id+"' LIMIT 1";
+						logger.info(sql2);
+						con.query(sql2, async function (err, result, fields)
 						{
 							if (result.length>0)
 							{
@@ -505,9 +505,9 @@ async function main()
 							}
 						});
 
-						sql="SELECT pairs.pair_id,t1.token_id AS token_1_id,t1.token_name AS token_1_name,t2.token_id AS token_2_id,t2.token_name AS token_2_name FROM nft.pairs INNER JOIN nft.tokens AS t1 on pairs.token_1_id=t1.token_id INNER JOIN nft.tokens AS t2 ON pairs.token_2_id=t2.token_id WHERE t1.token_public_id='"+message.token_1_id+"' AND t2.token_public_id='"+message.token_2_id+"' LIMIT 1";
-						logger.info(sql);
-						con.query(sql, async function (err, result, fields)
+						let sql3="SELECT pairs.pair_id,t1.token_id AS token_1_id,t1.token_name AS token_1_name,t2.token_id AS token_2_id,t2.token_name AS token_2_name FROM nft.pairs INNER JOIN nft.tokens AS t1 on pairs.token_1_id=t1.token_id INNER JOIN nft.tokens AS t2 ON pairs.token_2_id=t2.token_id WHERE t1.token_public_id='"+message.token_1_id+"' AND t2.token_public_id='"+message.token_2_id+"' LIMIT 1";
+						logger.info(sql3);
+						con.query(sql3, async function (err, result, fields)
 						{
 							if (err) logger.error(err);
 							logger.info("Result length-> " + result.length);
