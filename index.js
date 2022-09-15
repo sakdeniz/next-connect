@@ -454,12 +454,18 @@ async function main()
 				logger.info("Creating token pair...");
 				console.log("Signature -> "+ post.signature);
 				console.log("Message -> " + post.message);
-				console.log("TokenKey ->" + post.TokenKey);
+				console.log("TokenKey -> " + post.TokenKey);
 				let TokenId=bitcore.crypto.Hash.sha256sha256(Buffer.concat([new Buffer([48]), Uint8Array.from(Buffer.from(post.TokenKey, 'hex'))])).reverse().toString('hex');
-				console.log("TokenId ->" + TokenId);
+				console.log("TokenId -> " + TokenId);
 				let message=JSON.parse(post.message);
 				console.log("Token 1 ID : " + message.token_1_id);
 				console.log("Token 2 ID : " + message.token_2_id);
+				if (TokenId!=message.token_1_id)
+				{
+					obj={status:"token_id_not_verified",message:"Token ID not verified."};
+					sendResponse(res, 200,JSON.stringify(obj));
+					return;
+				}
 				let token_1_id=undefined;
 				let token_2_id=undefined;
 				bitcore.Transaction.Blsct.AugmentedVerify(post.TokenKey,post.message,Uint8Array.from(Buffer.from(post.signature, 'hex')))
