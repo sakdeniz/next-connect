@@ -596,7 +596,7 @@ async function main()
 					}
 					else
 					{
-						obj={status:"token_pair_failed",message:"Token pair cannot created."};
+						obj={status:"token_pair_failed",message:"Token signature cannot verified. Token pair cannot created."};
 						sendResponse(res, 200,JSON.stringify(obj));
 					}
 				});
