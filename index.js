@@ -33,7 +33,7 @@ async function main()
 	args.forEach(arg =>
 	{
 		let arga = arg.split("=");
-		console.log(arga[0]+"->"+arga[1]);
+		logger.info(arga[0]+"->"+arga[1]);
 		if (arga[0]=="-network")
 		{
 			network=arga[1];
@@ -452,26 +452,30 @@ async function main()
 			else if (req.url=="/CreateTokenPair")
 			{
 				logger.info("Creating token pair...");
-				console.log("Signature -> "+ post.signature);
-				console.log("Message -> " + post.message);
-				console.log("TokenKey -> " + post.TokenKey);
+				logger.info("Signature -> "+ post.signature);
+				logger.info("Message -> " + post.message);
+				logger.info("TokenKey -> " + post.TokenKey);
 				let TokenId=bitcore.crypto.Hash.sha256sha256(Buffer.concat([new Buffer([48]), Uint8Array.from(Buffer.from(post.TokenKey, 'hex'))])).reverse().toString('hex');
-				console.log("TokenId -> " + TokenId);
+				logger.info("TokenId -> " + TokenId);
 				let message=JSON.parse(post.message);
-				console.log("Token 1 ID : " + message.token_1_id);
-				console.log("Token 2 ID : " + message.token_2_id);
+				logger.info("Token 1 ID : " + message.token_1_id);
+				logger.info("Token 2 ID : " + message.token_2_id);
 				if (TokenId!=message.token_1_id)
 				{
 					obj={status:"token_id_not_verified",message:"Token ID not verified."};
 					sendResponse(res, 200,JSON.stringify(obj));
 					return;
 				}
+				else
+				{
+					logger.info("TokenId verified...");
+				}
 				let token_1_id=undefined;
 				let token_2_id=undefined;
 				bitcore.Transaction.Blsct.AugmentedVerify(post.TokenKey,post.message,Uint8Array.from(Buffer.from(post.signature, 'hex')))
 				.then(function(result)
 				{
-					console.log("AugmentedVerify Result -> " + result);
+					logger.info("AugmentedVerify Result -> " + result);
 					let obj=undefined;
 					if (result)
 					{
@@ -485,11 +489,11 @@ async function main()
 								{
 									token_1_id=o.token_id;
 								}
-								console.log("Token 1 found -> " + token_1_id);
+								logger.info("Token 1 found -> " + token_1_id);
 							}
 							else
 							{
-								console.log("Token 1 not found, getting token details...");
+								logger.info("Token 1 not found, getting token details...");
 								wallet.GetTokenInfo(message.token_1_id).then((token_info) =>
 								{
 									logger.info(token_info);
@@ -539,7 +543,7 @@ async function main()
 									{
 										token_2_id=o.token_id;
 									}
-									console.log("Token 2 found -> " + token_2_id);
+									logger.info("Token 2 found -> " + token_2_id);
 									setTimeout(function()
 									{
 										create_token_pair(message.token_1_id,token_1_id,message.token_2_id,token_2_id,res);
@@ -547,7 +551,7 @@ async function main()
 								}
 								else
 								{
-									console.log("Token 2 not found, getting token details...");
+									logger.info("Token 2 not found, getting token details...");
 									wallet.GetTokenInfo(message.token_2_id).then((token_info) =>
 									{
 										logger.info(token_info);
@@ -869,7 +873,7 @@ async function main()
 	const verifyStatus = (s) => 
 	{
 		logger.info("Verifying status...");
-		console.log(s);
+		logger.info(s);
 		if (s[1] && s[1].spender_txhash)
 		{
 			invalidateProof(s);
