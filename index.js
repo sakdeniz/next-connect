@@ -1026,7 +1026,7 @@ async function main()
 			}
 		});
 		logger.info("Subscribing for token orders...");
-		con.query("SELECT hash,nout FROM nft.token_orders WHERE is_valid=1 AND network_id="+network_id, async function (err, result, fields)
+		con.query("SELECT inputs FROM nft.token_orders WHERE is_valid=1 AND network_id="+network_id, async function (err, result, fields)
 		{
 			if (err) logger.error(err);
 			for (let e of result)
