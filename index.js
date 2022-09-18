@@ -1031,9 +1031,14 @@ async function main()
 			if (err) logger.error(err);
 			for (let e of result)
 			{
-				logger.info("Subscribing token order -> " + e.hash + "->" + e.nout);
-				let currentStatus = await client.blockchain_outpoint_subscribe(e.hash,parseInt(e.nout));
-				verifyStatus([[e.hash, parseInt(e.nout)], currentStatus]);
+				let inputs=JSON.parse(e.inputs);
+				console.log(inputs);
+				for (var input of inputs)
+				{
+					logger.info("Subscribing token order -> " + input.hash + "->" + input.nout);
+					let currentStatus = await client.blockchain_outpoint_subscribe(input.hash,parseInt(input.nout));
+					verifyStatus([[input.hash, parseInt(input.nout)], currentStatus]);
+				}
 			}
 		});
 	}
