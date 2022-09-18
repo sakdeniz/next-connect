@@ -615,7 +615,7 @@ async function main()
 					input_arr.push(
 					{
 						"hash":hash,
-						nout:nout
+						"nout":nout
 					});
 				}
 				logger.info("Creating token order...");
