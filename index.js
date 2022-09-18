@@ -671,7 +671,7 @@ async function main()
 									    `+network_id+`
 									);`;
 									//logger.info(sql);
-									con.query(sql,[JSON.stringify(post.order),JSON.stringify(Object.assign({}, input_arr))], async function (err, result)
+									con.query(sql,[JSON.stringify(post.order),JSON.stringify(input_arr)], async function (err, result)
 									{
 										if (err)
 										{
@@ -1029,10 +1029,6 @@ async function main()
 			{
 				let inputs=JSON.parse(e.inputs);
 				console.log(inputs);
-				Object.entries(inputs).forEach(entry => {
-				  const [key, value] = entry;
-				  console.log(key, value);
-				});
 				for (var input of inputs)
 				{
 					logger.info("Subscribing token order -> " + input.hash + "->" + input.nout);
