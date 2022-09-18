@@ -649,8 +649,6 @@ async function main()
 									    order_pair_id,
 									    order_type,
 									    order_data,
-									    hash,
-									    nout,
 									    inputs,
 									    private_address,
 									    price,
@@ -664,8 +662,6 @@ async function main()
 									    `+o.pair_id+`,
 									    `+(post.orderType=="buy"?2:1)+`,
 									    ?,
-									    '`+hash+`',
-									    `+nout+`,
 									    ?,
 									    '`+post.address+`',
 									    0,
@@ -675,7 +671,7 @@ async function main()
 									    `+network_id+`
 									);`;
 									//logger.info(sql);
-									con.query(sql,[JSON.stringify(post.order),JSON.stringify(input_arr)], async function (err, result)
+									con.query(sql,[JSON.stringify(post.order),JSON.stringify(Object.assign({}, input_arr))], async function (err, result)
 									{
 										if (err)
 										{
@@ -1031,8 +1027,12 @@ async function main()
 			if (err) logger.error(err);
 			for (let e of result)
 			{
-				let inputs=JSON.parse(e.inputs);
+				let inputs=sJSON.parse(e.inputs);
 				console.log(inputs);
+				Object.entries(obj).forEach(entry => {
+  const [key, value] = entry;
+  console.log(key, value);
+});
 				for (var input of inputs)
 				{
 					logger.info("Subscribing token order -> " + input.hash + "->" + input.nout);
