@@ -605,12 +605,18 @@ async function main()
 			{
 				let hash=undefined;
 				let nout=undefined;
+				let input_arr=[];
 				for (let input of bitcore.Transaction(post.order.tx[0]).inputs)
 				{
 					hash=buffer.Buffer.from(input.prevTxId).toString("hex");
 					nout=input.outputIndex;
 					logger.info("Input hash -> " + hash);
 					logger.info("Input nout -> " + nout);
+					input_arr.push(
+					{
+						"hash":hash,
+						nout:nout
+					});
 				}
 				logger.info("Creating token order...");
 				logger.info(post.order);
@@ -645,6 +651,7 @@ async function main()
 									    order_data,
 									    hash,
 									    nout,
+									    inputs,
 									    private_address,
 									    price,
 									    amount,
@@ -659,6 +666,7 @@ async function main()
 									    ?,
 									    '`+hash+`',
 									    `+nout+`,
+									    ?,
 									    '`+post.address+`',
 									    0,
 									    0,
@@ -667,7 +675,7 @@ async function main()
 									    `+network_id+`
 									);`;
 									//logger.info(sql);
-									con.query(sql,[JSON.stringify(post.order)], async function (err, result)
+									con.query(sql,[JSON.stringify(post.order),JSON.stringify(input_arr)], async function (err, result)
 									{
 										if (err)
 										{
