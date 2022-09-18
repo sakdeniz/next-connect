@@ -1027,9 +1027,9 @@ async function main()
 			if (err) logger.error(err);
 			for (let e of result)
 			{
-				let inputs=sJSON.parse(e.inputs);
+				let inputs=JSON.parse(e.inputs);
 				console.log(inputs);
-				Object.entries(obj).forEach(entry => {
+				Object.entries(inputs).forEach(entry => {
   const [key, value] = entry;
   console.log(key, value);
 });
