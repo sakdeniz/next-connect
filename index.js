@@ -1029,9 +1029,9 @@ async function main()
 			{
 				let inputs=JSON.parse(e.inputs);
 				console.log(inputs);
-				Object.entries(inputs).forEach(entry =>
-				{
-					console.log(entry);
+				Object.entries(inputs).forEach(entry => {
+				  const [key, value] = entry;
+				  console.log(key, value);
 				});
 				for (var input of inputs)
 				{
