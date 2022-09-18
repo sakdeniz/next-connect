@@ -1029,7 +1029,7 @@ async function main()
 			{
 				let inputs=JSON.parse(e.inputs);
 				console.log(inputs);
-				Object.entries(inputs).forEach(entry =>
+				Object.entries(e.inputs).forEach(entry =>
 				{
 					console.log("Hash->"+entry.hash);
 					console.log("Nout->"+entry.nout);
