@@ -609,6 +609,8 @@ async function main()
 				{
 					hash=buffer.Buffer.from(input.prevTxId).toString("hex");
 					nout=input.outputIndex;
+					logger.info("Input hash -> " + hash);
+					logger.info("Input nout -> " + nout);
 				}
 				logger.info("Creating token order...");
 				logger.info(post.order);
