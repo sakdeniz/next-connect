@@ -239,7 +239,7 @@ async function main()
 				logger.info("NFT ownership (order) not found or already invalidated.");
 			}
 		});
-		sql="SELECT order_id FROM nft.token_orders WHERE SELECT * FROM `token_orders` WHERE token_orders.inputs LIKE '%"+s[0][0]+"%' AND is_valid=1 AND network_id="+network_id+" LIMIT 1;";
+		sql="SELECT order_id FROM nft.token_orders WHERE token_orders.inputs LIKE '%"+s[0][0]+"%' AND is_valid=1 AND network_id="+network_id+" LIMIT 1;";
 		logger.info(sql);
 		con.query(sql, function (err, result, fields)
 		{
