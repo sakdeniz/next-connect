@@ -686,8 +686,10 @@ async function main()
 											input_arr.forEach(e =>
 											{
 												logger.info("Subscribing token order -> " + e.hash + "->" + e.nout);
-												let currentStatus = await client.blockchain_outpoint_subscribe(e.hash,e.nout);
-												verifyStatus([[e.hash, e.nout], currentStatus]);
+												client.blockchain_outpoint_subscribe(e.hash,e.nout).then((currentStatus) =>
+												{
+													verifyStatus([[e.hash, e.nout], currentStatus]);
+												});
 											});
 											let obj={status:"order_created",message:"Token order ("+o.token_1_name+"/"+o.token_2_name+") successfully created."};
 											sendResponse(res, 200,JSON.stringify(obj));
