@@ -1029,10 +1029,11 @@ async function main()
 			{
 				let inputs=JSON.parse(e.inputs);
 				console.log(inputs);
-				Object.entries(inputs).forEach(entry => {
-  const [key, value] = entry;
-  console.log(key, value);
-});
+				Object.entries(inputs).forEach(entry =>
+				{
+					console.log("Hash->"+entry.hash);
+					console.log("Nout->"+entry.nout);
+				});
 				for (var input of inputs)
 				{
 					logger.info("Subscribing token order -> " + input.hash + "->" + input.nout);
